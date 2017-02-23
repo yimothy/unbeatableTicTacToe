@@ -5,26 +5,32 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
-      versus: 'human', // human or AI
+      versus: 'Human', // human or AI
       board: Array(9).fill(false), // Default starting board with no values
       xTurn: true,
+      AITurn: false,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.versus = this.versus.bind(this);
+  }
+
+  versus(event) {
+    // Set state to vs human or AI depending on button click
+    this.setState({ versus: event.target.value })
   }
 
   handleClick(i) {
-    //Check if square is already filled
-
+    // Check if game over or square is already filled
     if (!this.gameOver(this.state.board) && !this.state.board[i]) {
       const newBoard = this.state.board.slice();
       newBoard[i] = this.state.xTurn ? 'X' : 'O';
-        this.setState({
-          board: newBoard,
-          xTurn: !this.state.xTurn,
-        });
+      this.setState({
+        board: newBoard,
+        xTurn: !this.state.xTurn,
+      });
     }
   }
-
+// Check if anyone has won
   gameOver(board) {
     let gameOver = false;
     const checkRows = (rowArr) => {
@@ -56,13 +62,19 @@ export default class Game extends Component {
 
   render() {
     let winner;
-    if(this.gameOver(this.state.board)) {
+    const versus = this.state.versus;
+    console.log("STATE: ", this.state);
+    if (this.gameOver(this.state.board)) {
       winner = this.state.xTurn ? 'O' : 'X';
     }
+
     return (
       <div>
         <h1>TIC TAC TOE</h1>
         <div>WINNER: {winner}</div>
+        <div>PLAYING AGAINST: {versus}</div>
+        <button onClick={this.versus} value='Human'>VS HUMAN</button>
+        <button onClick={this.versus} value='AI'>VS AI</button>
         <Board board={this.state.board} onClick={this.handleClick} />
       </div>
     );
