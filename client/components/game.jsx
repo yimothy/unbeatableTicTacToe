@@ -7,14 +7,16 @@ export default class Game extends Component {
     this.state = {
       versus: 'human', // human or AI
       board: Array(9).fill(false), // Default starting board with no values
+      xTurn: true,
     };
   }
+
 
   render() {
     return (
       <div>
         <h1>GAME</h1>
-        <Board />
+        <Board board={this.state.board} />
       </div>
     );
   }
