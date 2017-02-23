@@ -4,6 +4,7 @@
   "description": "A tic tac toe that cannot be defeated.",
   "main": "client/index.js",
   "scripts": {
+    "start": "nodemon ./server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
