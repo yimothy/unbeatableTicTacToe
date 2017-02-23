@@ -1,0 +1,4 @@
+//Using the Airbnb style guide with eslint
+{
+  "extends": "airbnb"
+}
