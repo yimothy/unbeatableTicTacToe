@@ -8,11 +8,12 @@ export default function Board(props) {
 
   const renderSquares = () => {
     return board.map((value, i) => {
-      return <Square key={i} value={value || i} />
+      return <Square key={i} index={i} value={value} onClick={() => {props.onClick(i)}} />
     });
   };
+
   return (
-    <div>
+    <div >
       <h1>BOARD</h1>
       {renderSquares()}
     </div>
