@@ -14,6 +14,20 @@ export default class Game extends Component {
     this.versus = this.versus.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log("PLAYER MOVED")
+    //When DOM is updated, if versus AI and AI's turn, AI moves
+    if(this.state.versus === 'AI' && this.state.AITurn) {
+      const newBoard = this.state.board.slice();
+      newBoard[4] = this.state.xTurn ? 'X' : 'O';
+      this.setState({
+        board: newBoard,
+        xTurn: !this.state.xTurn,
+        AITurn: !this.state.AITurn,
+      })
+    }
+  }
+
   versus(event) {
     // Set state to vs human or AI depending on button click
     this.setState({ versus: event.target.value })
@@ -27,6 +41,7 @@ export default class Game extends Component {
       this.setState({
         board: newBoard,
         xTurn: !this.state.xTurn,
+        AITurn: !this.state.AITurn,
       });
     }
   }
@@ -73,8 +88,8 @@ export default class Game extends Component {
         <h1>TIC TAC TOE</h1>
         <div>WINNER: {winner}</div>
         <div>PLAYING AGAINST: {versus}</div>
-        <button onClick={this.versus} value='Human'>VS HUMAN</button>
-        <button onClick={this.versus} value='AI'>VS AI</button>
+        <button onClick={this.versus} value="Human">VS HUMAN</button>
+        <button onClick={this.versus} value="AI">VS AI</button>
         <Board board={this.state.board} onClick={this.handleClick} />
       </div>
     );
