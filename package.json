@@ -5,6 +5,7 @@
   "main": "client/index.js",
   "scripts": {
     "start": "nodemon ./server/server.js",
+    "dev": "webpack -d --watch --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/yimothy/unbeatableTicTacToe#readme",
   "dependencies": {
     "express": "^4.14.1",
+    "path": "^0.12.7",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
