@@ -3,6 +3,10 @@ import Square from './square.jsx';
 
 export default function Board(props) {
   const board = props.board;
+  const style = {
+    width: '600px',
+    height: '600px',
+  }
 
   console.log(board);
 
@@ -13,8 +17,7 @@ export default function Board(props) {
   };
 
   return (
-    <div >
-      <h1>BOARD</h1>
+    <div style={style}>
       {renderSquares()}
     </div>
   );

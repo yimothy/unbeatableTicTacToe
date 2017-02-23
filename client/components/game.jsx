@@ -23,7 +23,7 @@ export default class Game extends Component {
     return (
       <div>
         <h1>GAME</h1>
-        <Board board={this.state.board} onClick={this.handleClick}/>
+        <Board board={this.state.board} onClick={this.handleClick} />
       </div>
     );
   }

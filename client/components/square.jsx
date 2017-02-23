@@ -2,11 +2,12 @@ import React from 'react';
 
 export default function Square(props) {
   const index = props.index;
-  console.log('INDEX: ', index)
+
   const style = {
-    width: '30px',
-    height: '30px',
+    width: '150px',
+    height: '150px',
     border: '2px solid black',
+    float: 'left',
   }
   return (
     <div style={style} onClick={() => props.onClick()}>
