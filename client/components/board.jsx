@@ -16,8 +16,12 @@ export default function Board(props) {
   console.log(board);
 
   const renderSquares = () => {
-    return board.map((value, i) => {
-      return <Square key={i} index={i} value={value} onClick={() => {props.onClick(i)}} />
+    let key = 0;
+    return board.map((row, i) => {
+      return row.map((value, j) => {
+        key++;
+        return <Square key={key} index={i} value={value} onClick={() => props.onClick(i, j)} />
+      })
     });
   };
 

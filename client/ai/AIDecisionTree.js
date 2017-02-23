@@ -11,7 +11,9 @@ class Tree {
   }
 }
 
-let AITree2 = new Tree();
+let AITree2 = new Tree("Corner");
+
+AITree2.addChild()
 
 
 export default decisionTree;
