@@ -1,5 +1,6 @@
 class AI {
   constructor(letter) {
+    // The letter of the AI
     this.letter = letter;
     this.rows = {
     // Each number represents a row
@@ -28,10 +29,10 @@ class AI {
           'O': 0},
     }
   }
+  //Read the move and add to this.rows / this.cols / this.diags
   readMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
-    console.log('READ MOVE LETTER: ', letter);
     this.rows[i][letter]++;
     this.cols[j][letter]++;
     //if first diagonal
@@ -50,6 +51,7 @@ class AI {
       this.diags[2][letter]++;
     }
   }
+  //Find all possible moves on the board.
   possibleMoves(board) {
     const moves = [];
     for (let i = 0; i < board.length; i++) {
@@ -61,6 +63,7 @@ class AI {
     }
     return moves;
   }
+  // Find if there could be a win with the next move.
   winNextMove(board, letter) {
     let other = letter === 'X' ? 'O' : 'X';
     let moves = [];
@@ -117,16 +120,41 @@ class AI {
     }
     return moves;
   }
-
+  findTrap(board, letter) {
+    const moves = this.possibleMoves(board);
+    const moveToTrap = [];
+    //Iterate through each move, save moves that would result in a 2 way trap
+    moves.forEach((move) => {
+      // Create a phantom board for AI to test move
+      let phantomBoard = board.map(row => row.slice());
+      let i = move[0];
+      let j = move[1];
+      //Toggle position to be the letter
+      phantomBoard[i][j] = letter;
+      // console.log('board: ', board, 'Phantom Board: ', phantomBoard, 'letter: ', letter, 'move: ', i, j);
+      //Test to see if that move would make a trap. If yes, save move.
+      if (this.winNextMove(phantomBoard).length > 1) {
+        moveToTrap.push(move);
+      }
+    });
+    console.log('moveToTrap: ', moveToTrap);
+    return moveToTrap;
+  }
+  /* This function prioritizes:
+  1) AI win in next move,
+  2) Block a human win in next move,
+  3) Find a 2 way trap in the next move (where the AI would have 2 possible moves to win)
+  4) Find and block a human's 2 way trap in the next move
+  5) Decision tree for first two moves
+  */
   AIMove(board) {
-    console.log("rows: ", this.rows)
-    // Check if AI can win in next move
+    // Check if AI has wins in next move or traps in next move
     const aiWins = this.winNextMove(board, this.letter);
-    // Check if human can win in next move
+    const aiTraps = this.findTrap(board, this.letter);
+    // Check if human can win in next move or trap in next move
     const human = this.letter === 'X' ? 'O' : 'X';
-    console.log('HUMAN LETTER: ', human, 'AI LETTER: ', this.letter);
     const humanWins = this.winNextMove(board, human);
-    console.log('Human Wins: ', humanWins);
+    const humanTraps = this.findTrap(board, human);
     // If AI can win in next move, return the move.
     if (aiWins.length > 0) {
       this.readMove(this.letter, aiWins[0][0], aiWins[0][1]);
@@ -137,11 +165,23 @@ class AI {
       this.readMove(this.letter, humanWins[0][0], humanWins[0][1]);
       return humanWins[0];
     }
-    // Add if AI can trap in 2 moves && if human can trap in 2 moves
+    // If AI can trap in 1 move, return that move.
+    else if (aiTraps.length > 0) {
+      this.readMove(this.letter, aiTraps[0][0], aiTraps[0][1]);
+      return aiTraps[0];
+    }
+    // If human can trap in 1 move, block that move.
+    else if (humanTraps.length > 0) {
+      this.readMove(this.letter, humanTraps[0][0], humanTraps[0][1]);
+      return humanTraps[0];
+    }
     else {
       const moves = this.possibleMoves(board);
-      this.readMove(this.letter, moves[0][0], moves[0][1]);
-      return moves[0];
+      if(moves.length > 0) {
+        const rand = Math.floor(Math.random()*moves.length);
+        this.readMove(this.letter, moves[rand][0], moves[rand][1]);
+        return moves[rand];
+      }
     }
   }
 }
