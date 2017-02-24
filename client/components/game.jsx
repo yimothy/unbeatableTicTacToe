@@ -98,9 +98,13 @@ export default class Game extends Component {
   handleClick(i, j) {
     // Check if game over / square is already filled / it's AI's turn
     if (!this.gameOver(this.state.board) && !this.state.board[i][j] && !this.state.AITurn) {
-      //AI reads human's moves
-      this.ai.readMove(this.state.humanLetter, i, j);
-      //Create newBoard
+      let AITurn = this.state.AITurn;
+      // AI reads human's moves
+      if (this.state.versus === 'AI') {
+        this.ai.readMove(this.state.humanLetter, i, j);
+        AITurn = !AITurn;
+      }
+      // Create newBoard
       const newBoard = [];
       this.state.board.forEach((row) => {
         newBoard.push(row.slice());
@@ -110,7 +114,7 @@ export default class Game extends Component {
       this.setState({
         board: newBoard,
         xTurn: !this.state.xTurn,
-        AITurn: !this.state.AITurn,
+        AITurn,
       });
     }
   }
