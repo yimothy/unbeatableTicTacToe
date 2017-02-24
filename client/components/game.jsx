@@ -107,6 +107,7 @@ export default class Game extends Component {
 // Function to check if anyone has won
   gameOver(board) {
     let gameOver = false;
+    //Function to check rows if a player has won
     const checkRows = () => {
       board.forEach((row) => {
           if (row[0] && row[0] === row[1] && row[0] === row[2]) {
@@ -114,6 +115,7 @@ export default class Game extends Component {
           }
       });
     };
+    //Function to check columns if a player has won
     const checkCols = () => {
         for(let j = 0; j< board.length; j++) {
           if (board[0][j] && board[0][j] === board[1][j] && board[0][j] === board[2][j]) {
@@ -121,6 +123,7 @@ export default class Game extends Component {
           }
         }
     };
+    //Function to check diagonals if a player has won
     const checkDiags = () => {
       if ((board[0][0] && board[0][0] === board[1][1] && board[0][0] === board[2][2])
       || (board[0][2] && board[0][2] === board[1][1] && board[0][2] === board[2][0])) {
