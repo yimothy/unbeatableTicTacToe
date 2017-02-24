@@ -25,6 +25,7 @@ export default class Game extends Component {
       }
       board.push(row);
     }
+    //Set board on state
     this.setState({ board })
   }
 
