@@ -29,6 +29,7 @@ class AI = {
   }
   readHumanMove(enemy, i, j) {
     // enemy variable represents human's letter, 'X' or 'O'
+    // Add move to the select row, column, and diagonal
     this.rows[i][enemy]++;
     this.cols[j][enemy]++;
     //if first diagonal
@@ -49,22 +50,50 @@ class AI = {
   },
   winNextMove(board, letter, enemy) {
     let moves = [];
-    //Check rows for next move wins
+    //Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
     for(let key in this.rows) {
       if(key[letter] === 2 && key[enemy] === 0) {
-
+        //Find the move that will end the game
+        let j = board[key].indexOf(false);
+        let i = parseInt(key);
+        moves.push([i, j]);
       }
     }
     //Check columns for next move wins
     for(let key in this.columns) {
       if(key[letter] === 2 && key[enemy] === 0) {
-
+        //Find the move that will end the game
+        for(let i = 0; i < board.length ; i++) {
+          if(!board[i][key]) {
+            let j = parseInt(key);
+            moves.push([i, j])
+          }
+        }
       }
     }
     //Check diagonals for next move wins
-    for(let key in this.diagonal) {
-      if(key[letter] === 2 && key[enemy] === 0) {
-
+    //Check first diagonal
+    if(this.diags[1][letter] === 2 && this.diags[1][enemy] === 0) {
+      let i = 0;
+      let j = 0;
+      while(i < board.length) {
+        if(!board[i][j]) {
+          moves.push([i, j])
+        }
+        i++;
+        j++;
+      }
+    }
+    //Check second diagonal
+    if(this.diags[2][letter] === 2 && this.diags[2][enemy] === 0) {
+      let i = 0;
+      let j = 2;
+      while(i < board.length) {
+        if(!board[i][j]) {
+          moves.push([i, j])
+        }
+        i++;
+        j--;
       }
     }
   }
