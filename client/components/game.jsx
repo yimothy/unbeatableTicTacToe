@@ -5,6 +5,7 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
+      turn: 0,
       versus: 'Human', // human or AI
       board: null, // Default starting board with no values
       xTurn: true,
@@ -31,7 +32,7 @@ export default class Game extends Component {
     console.log("PLAYER MOVED")
     // When DOM is updated, if versus AI and AI's turn, AI moves
     if(this.state.versus === 'AI' && this.state.AITurn) {
-      const newBoard = this.state.board.slice();
+      const newBoard = this.state.board.map(row => row.slice());
       // AI calculates best move here
 
       newBoard[1][1] = this.state.xTurn ? 'X' : 'O';
@@ -44,12 +45,49 @@ export default class Game extends Component {
   }
 
   versus(event) {
-    // Set state to vs human or AI depending on button click
-    this.setState({ versus: event.target.value })
+    let mode = event.target.value;
+    console.log('mode: ', mode);
+    // Create new board
+    let board = [];
+    for (let i = 0; i < 3; i++) {
+      const row = [];
+      for (let j = 0; j < 3; j++) {
+        row.push(false);
+      }
+      board.push(row);
+    }
+    // if human choses AI moves first. Reset board.
+    if (mode === 'AI1') {
+      console.log('IN AI1')
+      this.setState({
+        turn: 0,
+        versus: 'AI',
+        board,
+        xTurn: true,
+        AITurn: true,
+      });
+    // if human choses AI moves second. Reset board.
+    } else if (mode === 'AI2') {
+      console.log('IN AI2')
+      this.setState({
+        turn: 0,
+        versus: 'AI',
+        board,
+        xTurn: true,
+      });
+    // if human vs human. Reset board.
+    } else {
+      console.log('IN HUMAN')
+      this.setState({
+        turn: 0,
+        versus: 'Human',
+        board,
+        xTurn: true,
+      });
+    }
   }
 
   handleClick(i, j) {
-    console.log('CLICKED')
     // Check if game over / square is already filled / it's AI's turn
     if (!this.gameOver(this.state.board) && !this.state.board[i][j]) {
       //Create newBoard
@@ -99,7 +137,6 @@ export default class Game extends Component {
   render() {
     let winner;
     const versus = this.state.versus;
-    console.log("STATE: ", this.state);
     if (this.gameOver(this.state.board)) {
       winner = this.state.xTurn ? 'O' : 'X';
     }
@@ -110,7 +147,8 @@ export default class Game extends Component {
         <div>WINNER: {winner}</div>
         <div>PLAYING AGAINST: {versus}</div>
         <button onClick={this.versus} value="Human">VS HUMAN</button>
-        <button onClick={this.versus} value="AI">VS AI</button>
+        <button onClick={this.versus} value="AI2">VS AI (Human first)</button>
+        <button onClick={this.versus} value="AI1">VS AI (AI first)</button>
         <Board board={this.state.board} onClick={this.handleClick} />
       </div>
     );
