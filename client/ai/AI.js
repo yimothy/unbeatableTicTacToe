@@ -47,10 +47,26 @@ class AI = {
       this.diags[2][enemy]++;
     }
   },
-  winNextMove(board, letter) {
+  winNextMove(board, letter, enemy) {
     let moves = [];
-    //Check for next move wins
+    //Check rows for next move wins
+    for(let key in this.rows) {
+      if(key[letter] === 2 && key[enemy] === 0) {
 
+      }
+    }
+    //Check columns for next move wins
+    for(let key in this.columns) {
+      if(key[letter] === 2 && key[enemy] === 0) {
+
+      }
+    }
+    //Check diagonals for next move wins
+    for(let key in this.diagonal) {
+      if(key[letter] === 2 && key[enemy] === 0) {
+
+      }
+    }
   }
 },
 AIMove(board) {
