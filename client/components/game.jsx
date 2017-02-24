@@ -47,8 +47,7 @@ export default class Game extends Component {
 
   versus(event) {
     let mode = event.target.value;
-    console.log('mode: ', mode);
-    // Create new board
+    // Create new board to reset
     let board = [];
     for (let i = 0; i < 3; i++) {
       const row = [];
