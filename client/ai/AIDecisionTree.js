@@ -11,7 +11,11 @@ class Tree {
   }
 }
 
-let AITree2 = new Tree("Corner");
+//Decision trees when AI goes second
+let AITree2 = {};
+let cornerTree = new Tree("Corner");
+let centerTree = new Tree("Center");
+let edgeTree = new Tree("Edge");
 
 AITree2.addChild()
 
