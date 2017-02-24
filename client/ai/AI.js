@@ -19,7 +19,7 @@ class AI = {
           'O': 0},
     };
     //Diagonsals = 1: [0,0], [1,1], [2,2]
-    //2: [0,2], [1,1], [0,2]
+    //2: [0,2], [1,1], [2,0]
     this.diags = {
       1: {'X': 0,
           'O': 0},
@@ -27,23 +27,34 @@ class AI = {
           'O': 0},
     }
   }
-  // countRow(row) {
-  //   let count = {
-  //     'X': 0,
-  //     'O': 0,
-  //   };
-  //   row.forEach((value) => {
-  //     if(value) {
-  //       count[value]++;
-  //     }
-  //   });
-  //   return count;
-  // },
+  readHumanMove(enemy, i, j) {
+    // enemy variable represents human's letter, 'X' or 'O'
+    this.rows[i][enemy]++;
+    this.cols[j][enemy]++;
+    //if first diagonal
+    if(i === j) {
+      //if center
+      if(i === 1) {
+        this.diags[1][enemy]++;
+        this.diags[2][enemy]++;
+      }
+      else{
+        this.diags[1][enemy]++;
+      }
+    }
+    //if second diagonal
+    else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
+      this.diags[2][enemy]++;
+    }
+  },
   winNextMove(board, letter) {
     let moves = [];
     //Check for next move wins
 
   }
+},
+AIMove(board) {
+
 }
 
 export default AI;
