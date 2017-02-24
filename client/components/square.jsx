@@ -1,14 +1,15 @@
 import React from 'react';
 
 export default function Square(props) {
-  const index = props.index;
-
   const style = {
-    width: '150px',
-    height: '150px',
+    width: '15vw',
+    height: '15vw',
     border: '2px solid black',
     float: 'left',
-  }
+    fontSize: '14vw',
+    textAlign: 'center',
+    fontFamily: 'Baloo',
+  };
   return (
     <div style={style} onClick={() => props.onClick()}>
       {props.value}
