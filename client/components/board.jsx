@@ -13,8 +13,6 @@ export default function Board(props) {
     bottom: '0',
   }
 
-  console.log(board);
-
   const renderSquares = () => {
     let key = 0;
     return board.map((row, i) => {

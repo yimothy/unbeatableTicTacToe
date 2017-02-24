@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import Board from './board.jsx';
+import AI from '../ai/AI.js';
 
 export default class Game extends Component {
   constructor() {
     super();
+    //Create an AI from the AI class
+    this.ai;
     this.state = {
       turn: 0,
       versus: 'Human', // human or AI
       board: null, // Default starting board with no values
       xTurn: true,
       AITurn: false,
+      humanLetter: null,
     };
     this.handleClick = this.handleClick.bind(this);
     this.versus = this.versus.bind(this);
@@ -30,18 +34,20 @@ export default class Game extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("PLAYER MOVED")
+    console.log("DIDUPDATE STATE: ", this.state)
     // When DOM is updated, if versus AI and AI's turn, AI moves
     if(this.state.versus === 'AI' && this.state.AITurn) {
       const newBoard = this.state.board.map(row => row.slice());
       // AI calculates best move here
-
-      newBoard[1][1] = this.state.xTurn ? 'X' : 'O';
-      this.setState({
-        board: newBoard,
-        xTurn: !this.state.xTurn,
-        AITurn: !this.state.AITurn,
-      })
+      let aiMove = this.ai.AIMove(this.state.board);
+      if(aiMove.length > 0) {
+        newBoard[aiMove[0]][aiMove[1]] = this.state.xTurn ? 'X' : 'O';
+        this.setState({
+          board: newBoard,
+          xTurn: !this.state.xTurn,
+          AITurn: !this.state.AITurn,
+        })
+      }
     }
   }
 
@@ -58,21 +64,25 @@ export default class Game extends Component {
     }
     // if human choses AI moves first. Reset board.
     if (mode === 'AI1') {
+      this.ai = new AI('X');
       this.setState({
         turn: 0,
         versus: 'AI',
         board,
         xTurn: true,
         AITurn: true,
+        humanLetter: 'O',
       });
     // if human choses AI moves second. Reset board.
     } else if (mode === 'AI2') {
+      this.ai = new AI('O');
       this.setState({
         turn: 0,
         versus: 'AI',
         board,
         xTurn: true,
         AITurn: false,
+        humanLetter: 'X',
       });
     // if human vs human. Reset board.
     } else {
@@ -87,7 +97,9 @@ export default class Game extends Component {
 
   handleClick(i, j) {
     // Check if game over / square is already filled / it's AI's turn
-    if (!this.gameOver(this.state.board) && !this.state.board[i][j]) {
+    if (!this.gameOver(this.state.board) && !this.state.board[i][j] && !this.state.AITurn) {
+      //AI reads human's moves
+      this.ai.readMove(this.state.humanLetter, i, j);
       //Create newBoard
       const newBoard = [];
       this.state.board.forEach((row) => {
