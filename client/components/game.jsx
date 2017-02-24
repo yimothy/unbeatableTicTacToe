@@ -58,7 +58,6 @@ export default class Game extends Component {
     }
     // if human choses AI moves first. Reset board.
     if (mode === 'AI1') {
-      console.log('IN AI1')
       this.setState({
         turn: 0,
         versus: 'AI',
@@ -68,16 +67,15 @@ export default class Game extends Component {
       });
     // if human choses AI moves second. Reset board.
     } else if (mode === 'AI2') {
-      console.log('IN AI2')
       this.setState({
         turn: 0,
         versus: 'AI',
         board,
         xTurn: true,
+        AITurn: false,
       });
     // if human vs human. Reset board.
     } else {
-      console.log('IN HUMAN')
       this.setState({
         turn: 0,
         versus: 'Human',
