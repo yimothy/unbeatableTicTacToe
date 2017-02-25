@@ -116,7 +116,7 @@ class AI {
     if (this.diags[1][letter] === 2 && this.diags[1][other] === 0) {
       let i = 0;
       let j = 0;
-      while(i < board.length) {
+      while (i < board.length) {
         if (!board[i][j]) {
           moves.push([i, j])
         }
@@ -124,12 +124,12 @@ class AI {
         j++;
       }
     }
-    //Check second diagonal
-    if(this.diags[2][letter] === 2 && this.diags[2][other] === 0) {
+    // Check second diagonal
+    if (this.diags[2][letter] === 2 && this.diags[2][other] === 0) {
       let i = 0;
       let j = 2;
-      while(i < board.length) {
-        if(!board[i][j]) {
+      while (i < board.length) {
+        if (!board[i][j]) {
           moves.push([i, j])
         }
         i++;
@@ -141,23 +141,22 @@ class AI {
   findTrap(board, letter) {
     const moves = this.possibleMoves(board);
     const moveToTrap = [];
-    //Iterate through each move, save moves that would result in a 2 way trap
+    // Iterate through each move, save moves that would result in a 2 way trap
     moves.forEach((move) => {
       // Create a phantom board for AI to test move
-      let phantomBoard = board.map(row => row.slice());
-      let i = move[0];
-      let j = move[1];
-      //Toggle AI to read next move
+      const phantomBoard = board.map(row => row.slice());
+      const i = move[0];
+      const j = move[1];
+      // Toggle AI to read next move
       phantomBoard[i][j] = letter;
       this.readMove(letter, i, j);
-      //Test to see if that move would make a trap. If yes, save move.
+      // Test to see if that move would make a trap. If yes, save move.
       if (this.winNextMove(phantomBoard, letter).length > 1) {
         moveToTrap.push(move);
       }
-      //UnToggle AI's phantom move
+      // UnToggle AI's phantom move
       this.undoMove(letter, i, j);
     });
-    console.log('moveToTrap: ', moveToTrap);
     return moveToTrap;
   }
   /* This function prioritizes:
@@ -197,12 +196,13 @@ class AI {
     }
     else {
       const moves = this.possibleMoves(board);
-      if(moves.length > 0) {
+      if (moves.length > 0) {
         const rand = Math.floor(Math.random()*moves.length);
         this.readMove(this.letter, moves[rand][0], moves[rand][1]);
         return moves[rand];
       }
     }
+    return [];
   }
 }
 export default AI;
