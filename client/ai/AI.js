@@ -87,37 +87,37 @@ class AI {
   }
   // Find if there could be a win with the next move.
   winNextMove(board, letter) {
-    let other = letter === 'X' ? 'O' : 'X';
-    let moves = [];
+    const other = letter === 'X' ? 'O' : 'X';
+    const moves = [];
     //Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
-    for(let row in this.rows) {
+    for (const row in this.rows) {
       // console.log('ROW: ', row)
-      if(this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
-        //Find the move that will end the game
-        let j = board[row].indexOf(false);
-        let i = parseInt(row);
+      if (this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
+        // Find the move that will end the game
+        const j = board[row].indexOf(false);
+        const i = parseInt(row);
         moves.push([i, j]);
       }
     }
-    //Check columns for next move wins
-    for(let col in this.cols) {
-      if(this.cols[col][letter] === 2 && this.cols[col][other] === 0) {
-        //Find the move that will end the game
-        for(let i = 0; i < board.length ; i++) {
-          if(!board[i][col]) {
-            let j = parseInt(col);
+    // Check columns for next move wins
+    for (const col in this.cols) {
+      if (this.cols[col][letter] === 2 && this.cols[col][other] === 0) {
+        // Find the move that will end the game
+        for (let i = 0; i < board.length; i++) {
+          if (!board[i][col]) {
+            const j = parseInt(col);
             moves.push([i, j])
           }
         }
       }
     }
-    //Check diagonals for next move wins
-    //Check first diagonal
-    if(this.diags[1][letter] === 2 && this.diags[1][other] === 0) {
+    // Check diagonals for next move wins
+    // Check first diagonal
+    if (this.diags[1][letter] === 2 && this.diags[1][other] === 0) {
       let i = 0;
       let j = 0;
       while(i < board.length) {
-        if(!board[i][j]) {
+        if (!board[i][j]) {
           moves.push([i, j])
         }
         i++;

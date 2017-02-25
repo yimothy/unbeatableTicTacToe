@@ -34,13 +34,12 @@ export default class Game extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("DIDUPDATE STATE: ", this.state)
     // When DOM is updated, if versus AI and AI's turn, AI moves
     if(this.state.versus === 'AI' && this.state.AITurn) {
       const newBoard = this.state.board.map(row => row.slice());
       // AI calculates best move here
       let aiMove = this.ai.AIMove(this.state.board);
-      if(aiMove.length > 0) {
+      if(aiMove.length > 0 && !this.gameOver(this.state.board)) {
         newBoard[aiMove[0]][aiMove[1]] = this.state.xTurn ? 'X' : 'O';
         this.setState({
           board: newBoard,
