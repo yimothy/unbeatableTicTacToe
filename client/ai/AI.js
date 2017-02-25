@@ -51,6 +51,28 @@ class AI {
       this.diags[2][letter]++;
     }
   }
+  //Read the move and add to this.rows / this.cols / this.diags
+  undoMove(letter, i, j) {
+    // letter variable represents letter played, 'X' or 'O'
+    // Add move to the select row, column, and diagonal
+    this.rows[i][letter]--;
+    this.cols[j][letter]--;
+    //if first diagonal
+    if(i === j) {
+      //if center
+      if(i === 1) {
+        this.diags[1][letter]--;
+        this.diags[2][letter]--;
+      }
+      else{
+        this.diags[1][letter]--;
+      }
+    }
+    //if second diagonal
+    else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
+      this.diags[2][letter]--;
+    }
+  }
   //Find all possible moves on the board.
   possibleMoves(board) {
     const moves = [];
@@ -72,7 +94,6 @@ class AI {
       // console.log('ROW: ', row)
       if(this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
         //Find the move that will end the game
-        console.log('ROW: IN ABOUT TO WIN: ', this.rows)
         let j = board[row].indexOf(false);
         let i = parseInt(row);
         moves.push([i, j]);
@@ -82,7 +103,6 @@ class AI {
     for(let col in this.cols) {
       if(this.cols[col][letter] === 2 && this.cols[col][other] === 0) {
         //Find the move that will end the game
-        console.log('COL: IN ABOUT TO WIN')
         for(let i = 0; i < board.length ; i++) {
           if(!board[i][col]) {
             let j = parseInt(col);
@@ -96,7 +116,6 @@ class AI {
     if(this.diags[1][letter] === 2 && this.diags[1][other] === 0) {
       let i = 0;
       let j = 0;
-      console.log('DIAG1: IN ABOUT TO WIN')
       while(i < board.length) {
         if(!board[i][j]) {
           moves.push([i, j])
@@ -109,7 +128,6 @@ class AI {
     if(this.diags[2][letter] === 2 && this.diags[2][other] === 0) {
       let i = 0;
       let j = 2;
-      console.log('DIAG2: IN ABOUT TO WIN')
       while(i < board.length) {
         if(!board[i][j]) {
           moves.push([i, j])
@@ -129,13 +147,15 @@ class AI {
       let phantomBoard = board.map(row => row.slice());
       let i = move[0];
       let j = move[1];
-      //Toggle position to be the letter
+      //Toggle AI to read next move
       phantomBoard[i][j] = letter;
-      // console.log('board: ', board, 'Phantom Board: ', phantomBoard, 'letter: ', letter, 'move: ', i, j);
+      this.readMove(letter, i, j);
       //Test to see if that move would make a trap. If yes, save move.
-      if (this.winNextMove(phantomBoard).length > 1) {
+      if (this.winNextMove(phantomBoard, letter).length > 1) {
         moveToTrap.push(move);
       }
+      //UnToggle AI's phantom move
+      this.undoMove(letter, i, j);
     });
     console.log('moveToTrap: ', moveToTrap);
     return moveToTrap;
