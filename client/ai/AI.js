@@ -31,7 +31,6 @@ class AI {
   }
   // Read the move and add to this.rows / this.cols / this.diags
   readMove(letter, i, j) {
-    console.log('readMove', letter, i, j)
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
     this.rows[i][letter]++;
@@ -53,7 +52,6 @@ class AI {
     }
   }
   readBoard(board) {
-    console.log('READ BOARD CALLED');
     this.rows = {
     // Each number represents a row
       0: {'X': 0,
@@ -88,11 +86,9 @@ class AI {
         }
       }
     }
-    console.log('ROWS IN READ BOARD:', this.rows, 'COLS: ', this.cols, 'diags: ', this.diags);
   }
   // Read the move and add to this.rows / this.cols / this.diags
   undoMove(letter, i, j) {
-    console.log('undo move: ', letter, i, j)
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
     this.rows[i][letter]--;
@@ -125,10 +121,27 @@ class AI {
     }
     return moves;
   }
+  //Finds all possible paths for 2 in a row (a threat)
+  createThreat(board) {
+    const threats = [];
+    const moves = this.possibleMoves(board);
+    moves.forEach((move) => {
+      const phantomBoard = board.map(row => row.slice());
+      const i = move[0];
+      const j = move[1];
+      phantomBoard[i][j] = this.letter;
+      const winNextMove = this.winNextMove(phantomBoard, this.letter);
+      console.log('WIN NEXT MOVE:', winNextMove)
+      if(winNextMove) {
+        threats.push([i,j]);
+      }
+    });
+    return threats;
+  }
   // Find if there could be a win with the next move.
   winNextMove(board, letter) {
     const other = letter === 'X' ? 'O' : 'X';
-    const moves = [];
+    const winMoves = [];
     //Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
     for (const row in this.rows) {
       // console.log('ROW: ', row)
@@ -137,7 +150,7 @@ class AI {
         const j = board[row].indexOf(false);
         if(j > -1) {
           const i = parseInt(row);
-          moves.push([i, j]);
+          winMoves.push([i, j]);
         }
       }
     }
@@ -148,7 +161,7 @@ class AI {
         for (let i = 0; i < board.length; i++) {
           if (!board[i][col]) {
             const j = parseInt(col);
-            moves.push([i, j])
+            winMoves.push([i, j])
           }
         }
       }
@@ -160,7 +173,7 @@ class AI {
       let j = 0;
       while (i < board.length) {
         if (!board[i][j]) {
-          moves.push([i, j])
+          winMoves.push([i, j])
         }
         i++;
         j++;
@@ -172,13 +185,13 @@ class AI {
       let j = 2;
       while (i < board.length) {
         if (!board[i][j]) {
-          moves.push([i, j])
+          winMoves.push([i, j])
         }
         i++;
         j--;
       }
     }
-    return moves;
+    return winMoves;
   }
   //Looks for moves that would guarantee win in 2 moves
   findTraps(board, letter) {
@@ -204,14 +217,14 @@ class AI {
     return winIn2;
   }
   lookAhead(board) {
-    console.log('LOOK AHEAD CALLED')
+    const bestMove = [];
     const moves = this.possibleMoves(board);
     const human = this.letter === 'X' ? 'O' : 'X';
-    let secondMove = false;
-    let secondHuman = false;
-    let thirdMove = false;
     // Iterate through each move, save moves that have best chance of winning
     moves.forEach((move) => {
+      let arows = this.rows;
+      let cols = this.cols;
+      let diags = this.diags;
       // Create a phantom board for AI to test it's 2nd move
       const phantomBoard = board.map(row => row.slice());
       const i2 = move[0];
@@ -223,10 +236,12 @@ class AI {
       let i3 = null;
       let j3 = null;
       // Toggle AI to read next move
-      phantomBoard[i2][j2] = this.letter;
       // this.readBoard(phantomBoard);
-      console.log('BOARD READ: ', this.rows);
-      // this.readMove(this.letter, i2, j2);
+      // console.log('PREBOARD READ: ', this.rows, 'preboard: ', phantomBoard, 'board: ', board);
+      phantomBoard[i2][j2] = this.letter;
+      this.readMove(this.letter, i2, j2);
+      // this.readBoard(phantomBoard);
+      console.log('phboard: ', phantomBoard, 'ROWS: ', this.rows);
       /* Predict human's next move
        Prioritizes moves based on:
        1) Any moves that the prioritizeMoves function returns
@@ -238,12 +253,12 @@ class AI {
         humanI = prioritizeHuman[0];
         humanJ = prioritizeHuman[1];
         phantomBoard[humanI][humanJ] = human;
-        // this.readMove(human, humanI, humanJ);
-      } else if (!board[1][1]) {
+        this.readMove(human, humanI, humanJ);
+      } else if (!phantomBoard[1][1]) {
         humanI = 1;
         humanJ = 1;
         phantomBoard[humanI][humanJ] = human;
-        // this.readMove(human, humanI, humanJ);
+        this.readMove(human, humanI, humanJ);
       }
       /* AI now checks if it has any prioritized moves for it's 3rd move.
       If so, place it on the phantomBoard and check to see if that move
@@ -257,39 +272,43 @@ class AI {
         i3 = prioritizeAI[0];
         j3 = prioritizeAI[1];
         phantomBoard[i3][j3] = this.letter;
-        // this.readMove(this.letter, i3, j3);
+        this.readMove(this.letter, i3, j3);
         let winMoves = this.winNextMove(phantomBoard, this.letter);
+        console.log('WIN MOVES: ', winMoves)
         //Undo all readMoves and return the AI's second move
         if (winMoves.length > 1) {
-          // this.undoMove(this.letter, i2, j2);
-          // this.undoMove(this.letter, i3, j3);
+          console.log('IN WIN MOVES:', winMoves)
+          this.undoMove(this.letter, i2, j2);
+          this.undoMove(this.letter, i3, j3);
           if(humanI !== null) {
-            // this.undoMove(human, humanI, humanJ);
+            this.undoMove(human, humanI, humanJ);
           }
-          return [i2, j2];
+          console.log('WIN MOVES 2ND MOVE: ', i2, j2);
+          bestMove.push([i2,j2]);
         }
       } else {
         let trapMoves = this.findTraps(phantomBoard, this.letter);
         console.log('phantomBoard in else: ', phantomBoard, 'rows: ', this.rows, 'trapmoves: ', trapMoves);
         if (trapMoves.length > 0) {
-          // this.undoMove(this.letter, i2, j2);
-          secondMove = false;
+          this.undoMove(this.letter, i2, j2);
           if(humanI !== null) {
-            // this.undoMove(human, humanI, humanJ);
+            this.undoMove(human, humanI, humanJ);
           }
-          return [i2, j2];
+          bestMove.push([i2,j2]);
         }
       }
-
-      // this.undoMove(this.letter, i2, j2);
-      secondMove = false;
+      this.undoMove(this.letter, i2, j2);
       if (i3 !== null) {
-        // this.undoMove(this.letter, i3, j3);
+        this.undoMove(this.letter, i3, j3);
       }
       if (humanI !== null) {
-        // this.undoMove(human, humanI, humanJ);
+        this.undoMove(human, humanI, humanJ);
       }
     })
+    console.log('FOR EACH OVER');
+    if(bestMove.length > 0) {
+      return bestMove[0];
+    }
     return [];
   }
   // genericMove(board) {
@@ -319,6 +338,7 @@ class AI {
   4) Find and block a human's 2 way trap in the next move
   */
   prioritizeMoves(board, letter) {
+    let rows = this.rows;
     // Check if AI has wins in next move or traps in next move
     const allyWins = this.winNextMove(board, letter);
     const allyTraps = this.findTraps(board, letter);
@@ -328,33 +348,30 @@ class AI {
     const enemyTraps = this.findTraps(board, enemy);
     // If AI can win in next move, return the move.
     if (allyWins.length > 0) {
-      this.readMove(this.letter, allyWins[0][0], allyWins[0][1]);
       return allyWins[0];
     }
     // If enemy can win in next move, block that move.
     else if (enemyWins.length > 0) {
-      this.readMove(this.letter, enemyWins[0][0], enemyWins[0][1]);
       return enemyWins[0];
     }
     // If AI can trap in 1 move, return that move.
     else if (allyTraps.length > 0) {
-      this.readMove(this.letter, allyTraps[0][0], allyTraps[0][1]);
       return allyTraps[0];
     }
     // If enemy can trap in 1 move, block that move.
-    else if (enemyTraps.length > 0) {
-      this.readMove(this.letter, enemyTraps[0][0], enemyTraps[0][1]);
+    else if (enemyTraps.length === 1) {
       return enemyTraps[0];
     }
     return [];
   }
+
   AIMove(board) {
+    // this.readBoard(board);
     // Find all possible moves.
-    this.readBoard(board);
-    console.log('rows: ', this.rows);
     const moves = this.possibleMoves(board);
     const prioritize = this.prioritizeMoves(board, this.letter);
     if (prioritize.length > 0) {
+      this.readMove(this.letter, prioritize[0], prioritize[1]);
       return prioritize;
     }
     if (moves.length > 0) {
