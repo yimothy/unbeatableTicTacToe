@@ -164,17 +164,40 @@ class AI {
   }
   look3MovesAhead(board) {
     const moves = this.possibleMoves(board);
+    const human = this.letter === 'X' ? 'O' : 'X';
     // Iterate through each move, save moves that have best chance of winning
     moves.forEach((move) => {
-      // Create a phantom board for AI to test move
+      // Create a phantom board for AI to test it's 2nd move
       const phantomBoard = board.map(row => row.slice());
-      const i = move[0];
-      const j = move[1];
+      const i2 = move[0];
+      const j2 = move[1];
       // Toggle AI to read next move
-      phantomBoard[i][j] = letter;
-      this.readMove(letter, i, j);
-      // Predict human's next move
-      // Prioritizes
+      phantomBoard[i2][j2] = letter;
+      this.readMove(letter, i2, j2);
+      /* Predict human's next move
+       Prioritizes moves based on:
+       1) Any moves that the prioritizeMoves function returns
+       2) Center
+       If the 2 above do not exist, do not toggle a human move.
+      */
+      const prioritizeHuman = this.prioritizeMoves(phantomBoard, human);
+      if (prioritizeHuman.length > 0) {
+        const humanI = prioritizeHuman[0];
+        const humanJ = prioritizeHuman[1];
+        phantomBoard[humanI][humanJ] = human;
+      } else if (!board[1][1]) {
+        phantomBoard[1][1] = human;
+      }
+      /* AI now checks if it has any prioritized moves for it's 3rd move.
+      If so, place it on the phantomBoard and check to see if that move guaranteed a win
+      (if there are 2 winning next moves)
+      */
+      const prioritizeAI = this.prioritizeMoves(phantomBoard, this.letter);
+      if (prioritizeAI.length > 0) {
+        let i3 = prioritizeAI[0];
+        let j3 = prioritizeAI[1];
+        phantomBoard[i][j]
+      }
     })
   }
   // genericMove(board) {
