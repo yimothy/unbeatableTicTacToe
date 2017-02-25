@@ -29,7 +29,7 @@ class AI {
           'O': 0},
     }
   }
-  //Read the move and add to this.rows / this.cols / this.diags
+  // Read the move and add to this.rows / this.cols / this.diags
   readMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -46,12 +46,12 @@ class AI {
         this.diags[1][letter]++;
       }
     }
-    //if second diagonal
+    // if second diagonal
     else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
       this.diags[2][letter]++;
     }
   }
-  //Read the move and add to this.rows / this.cols / this.diags
+  // Read the move and add to this.rows / this.cols / this.diags
   undoMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -68,12 +68,12 @@ class AI {
         this.diags[1][letter]--;
       }
     }
-    //if second diagonal
+    // if second diagonal
     else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
       this.diags[2][letter]--;
     }
   }
-  //Find all possible moves on the board.
+  // Find all possible moves on the board.
   possibleMoves(board) {
     const moves = [];
     for (let i = 0; i < board.length; i++) {
@@ -95,8 +95,10 @@ class AI {
       if (this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
         // Find the move that will end the game
         const j = board[row].indexOf(false);
-        const i = parseInt(row);
-        moves.push([i, j]);
+        if(j > -1) {
+          const i = parseInt(row);
+          moves.push([i, j]);
+        }
       }
     }
     // Check columns for next move wins
@@ -138,10 +140,11 @@ class AI {
     }
     return moves;
   }
-  findTrap(board, letter) {
+  //Looks for moves that would guarantee win in 2 moves
+  findTraps(board, letter) {
     const moves = this.possibleMoves(board);
-    const moveToTrap = [];
-    // Iterate through each move, save moves that would result in a 2 way trap
+    const winIn2 = [];
+    // Iterate through each move, save moves that would result in a win in 2 moves
     moves.forEach((move) => {
       // Create a phantom board for AI to test move
       const phantomBoard = board.map(row => row.slice());
@@ -152,28 +155,27 @@ class AI {
       this.readMove(letter, i, j);
       // Test to see if that move would make a trap. If yes, save move.
       if (this.winNextMove(phantomBoard, letter).length > 1) {
-        moveToTrap.push(move);
+        winIn2.push(move);
       }
       // UnToggle AI's phantom move
       this.undoMove(letter, i, j);
     });
-    return moveToTrap;
+    return winIn2;
   }
   /* This function prioritizes:
   1) AI win in next move,
   2) Block a human win in next move,
   3) Find a 2 way trap in the next move (where the AI would have 2 possible moves to win)
   4) Find and block a human's 2 way trap in the next move
-  5) Decision tree for first two moves
   */
-  AIMove(board) {
+  AIPrioritize(board) {
     // Check if AI has wins in next move or traps in next move
     const aiWins = this.winNextMove(board, this.letter);
-    const aiTraps = this.findTrap(board, this.letter);
+    const aiTraps = this.findTraps(board, this.letter);
     // Check if human can win in next move or trap in next move
     const human = this.letter === 'X' ? 'O' : 'X';
     const humanWins = this.winNextMove(board, human);
-    const humanTraps = this.findTrap(board, human);
+    const humanTraps = this.findTraps(board, human);
     // If AI can win in next move, return the move.
     if (aiWins.length > 0) {
       this.readMove(this.letter, aiWins[0][0], aiWins[0][1]);
@@ -194,13 +196,24 @@ class AI {
       this.readMove(this.letter, humanTraps[0][0], humanTraps[0][1]);
       return humanTraps[0];
     }
-    else {
-      const moves = this.possibleMoves(board);
-      if (moves.length > 0) {
-        const rand = Math.floor(Math.random()*moves.length);
-        this.readMove(this.letter, moves[rand][0], moves[rand][1]);
-        return moves[rand];
+    return [];
+  }
+  AIMove(board) {
+    // Find all possible moves.
+    const moves = this.possibleMoves(board);
+    const prioritize = this.AIPrioritize(board);
+    if (prioritize.length > 0) {
+      return prioritize;
+    }
+    if (moves.length > 0) {
+      // If AI moves first, place X in a corner.
+      if (moves.length === 9) {
+        return [0,2];
       }
+      // If AI moves second,
+      const rand = Math.floor(Math.random() * moves.length);
+      this.readMove(this.letter, moves[rand][0], moves[rand][1]);
+      return moves[rand];
     }
     return [];
   }

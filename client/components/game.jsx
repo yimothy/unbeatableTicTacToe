@@ -5,8 +5,8 @@ import AI from '../ai/AI.js';
 export default class Game extends Component {
   constructor() {
     super();
-    //Create an AI from the AI class
-    this.ai;
+    // Create an AI from the AI class
+    // this.ai;
     this.state = {
       turn: 0,
       versus: 'Human', // human or AI
@@ -35,11 +35,11 @@ export default class Game extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // When DOM is updated, if versus AI and AI's turn, AI moves
-    if(this.state.versus === 'AI' && this.state.AITurn) {
+    if (this.state.versus === 'AI' && this.state.AITurn) {
       const newBoard = this.state.board.map(row => row.slice());
       // AI calculates best move here
-      let aiMove = this.ai.AIMove(this.state.board);
-      if(aiMove.length > 0 && !this.gameOver(this.state.board)) {
+      const aiMove = this.ai.AIMove(this.state.board);
+      if (aiMove.length > 0 && !this.gameOver(this.state.board)) {
         newBoard[aiMove[0]][aiMove[1]] = this.state.xTurn ? 'X' : 'O';
         this.setState({
           board: newBoard,
@@ -61,7 +61,7 @@ export default class Game extends Component {
       }
       board.push(row);
     }
-    // if human choses AI moves first. Reset board.
+    // if human choses AI moves first. Create AI. Reset board.
     if (mode === 'AI1') {
       this.ai = new AI('X');
       this.setState({
@@ -72,7 +72,7 @@ export default class Game extends Component {
         AITurn: true,
         humanLetter: 'O',
       });
-    // if human choses AI moves second. Reset board.
+    // if human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
       this.ai = new AI('O');
       this.setState({
