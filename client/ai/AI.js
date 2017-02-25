@@ -162,53 +162,88 @@ class AI {
     });
     return winIn2;
   }
+  look3MovesAhead(board) {
+    const moves = this.possibleMoves(board);
+    // Iterate through each move, save moves that have best chance of winning
+    moves.forEach((move) => {
+      // Create a phantom board for AI to test move
+      const phantomBoard = board.map(row => row.slice());
+      const i = move[0];
+      const j = move[1];
+      // Toggle AI to read next move
+      phantomBoard[i][j] = letter;
+      this.readMove(letter, i, j);
+      // Predict human's next move
+      // Prioritizes
+    })
+  }
+  // genericMove(board) {
+  //   const moves = this.possibleMoves(board);
+  //   // See if AI moves first (# moves are odd) or second (# moves are even).
+  //   // Depending on which, will prioritize moves differently
+  //   if (moves % 2 === 1) {
+  //
+  //   }
+  //   /* If the AI moves second, it will prioritize:
+  //   1) Center,
+  //   2) Corner,
+  //   3) Edge
+  //   */
+  //   else {
+  //     // If the center is empty, move there
+  //     if (!board[1][1]) {
+  //       return board[1][1];
+  //     }
+  //     else if()
+  //   }
+  // }
   /* This function prioritizes:
   1) AI win in next move,
   2) Block a human win in next move,
   3) Find a 2 way trap in the next move (where the AI would have 2 possible moves to win)
   4) Find and block a human's 2 way trap in the next move
   */
-  AIPrioritize(board) {
+  prioritizeMoves(board, letter) {
     // Check if AI has wins in next move or traps in next move
-    const aiWins = this.winNextMove(board, this.letter);
-    const aiTraps = this.findTraps(board, this.letter);
+    const allyWins = this.winNextMove(board, letter);
+    const allyTraps = this.findTraps(board, letter);
     // Check if human can win in next move or trap in next move
-    const human = this.letter === 'X' ? 'O' : 'X';
-    const humanWins = this.winNextMove(board, human);
-    const humanTraps = this.findTraps(board, human);
+    const enemy = letter === 'X' ? 'O' : 'X';
+    const enemyWins = this.winNextMove(board, enemy);
+    const enemyTraps = this.findTraps(board, enemy);
     // If AI can win in next move, return the move.
-    if (aiWins.length > 0) {
-      this.readMove(this.letter, aiWins[0][0], aiWins[0][1]);
-      return aiWins[0];
+    if (allyWins.length > 0) {
+      this.readMove(this.letter, allyWins[0][0], allyWins[0][1]);
+      return allyWins[0];
     }
-    // If human can win in next move, block that move.
-    else if (humanWins.length > 0) {
-      this.readMove(this.letter, humanWins[0][0], humanWins[0][1]);
-      return humanWins[0];
+    // If enemy can win in next move, block that move.
+    else if (enemyWins.length > 0) {
+      this.readMove(this.letter, enemyWins[0][0], enemyWins[0][1]);
+      return enemyWins[0];
     }
     // If AI can trap in 1 move, return that move.
-    else if (aiTraps.length > 0) {
-      this.readMove(this.letter, aiTraps[0][0], aiTraps[0][1]);
-      return aiTraps[0];
+    else if (allyTraps.length > 0) {
+      this.readMove(this.letter, allyTraps[0][0], allyTraps[0][1]);
+      return allyTraps[0];
     }
-    // If human can trap in 1 move, block that move.
-    else if (humanTraps.length > 0) {
-      this.readMove(this.letter, humanTraps[0][0], humanTraps[0][1]);
-      return humanTraps[0];
+    // If enemy can trap in 1 move, block that move.
+    else if (enemyTraps.length > 0) {
+      this.readMove(this.letter, enemyTraps[0][0], enemyTraps[0][1]);
+      return enemyTraps[0];
     }
     return [];
   }
   AIMove(board) {
     // Find all possible moves.
     const moves = this.possibleMoves(board);
-    const prioritize = this.AIPrioritize(board);
+    const prioritize = this.prioritizeMoves(board, this.letter);
     if (prioritize.length > 0) {
       return prioritize;
     }
     if (moves.length > 0) {
       // If AI moves first, place X in a corner.
       if (moves.length === 9) {
-        return [0,2];
+        return [0,0];
       }
       // If AI moves second,
       const rand = Math.floor(Math.random() * moves.length);
