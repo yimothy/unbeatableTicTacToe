@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "fontFamily": "Nunito, sans-serif",
+      "width": "100vw",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "left": "0",
+        "margin": "auto",
+        "minWidth": "310px",
+        "right": "0",
+        "width": "35vw",
+      }
+    }
+  >
+    <h1>
+      IMPOSSIBLE TIC TAC TOE
+    </h1>
+    <div>
+      PLAYING AGAINST: 
+      Human
+       
+      <span>
+         | X Turn
+      </span>
+    </div>
+    <div>
+      CHOOSE YOUR ENEMY: 
+      <span>
+         
+      </span>
+      <button
+        onClick={[Function]}
+        value="Human"
+      >
+        HUMAN
+      </button>
+      <button
+        onClick={[Function]}
+        value="AI1"
+      >
+        AI goes first
+      </button>
+      <button
+        onClick={[Function]}
+        value="AI2"
+      >
+        AI goes second
+      </button>
+    </div>
+  </div>
+  <div
+    style={
+      Object {
+        "bottom": "0",
+        "display": "flex",
+        "flexFlow": "row wrap",
+        "height": "35vw",
+        "left": "0",
+        "margin": "auto",
+        "minHeight": "310px",
+        "minWidth": "310px",
+        "right": "0",
+        "top": "0",
+        "width": "35vw",
+      }
+    }
+  >
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "white",
+          "border": "2px solid #dae5bc",
+          "float": "left",
+          "fontFamily": "Nunito, sans-serif",
+          "fontSize": "calc(50px + 4.5vw)",
+          "height": "32%",
+          "textAlign": "center",
+          "width": "32%",
+        }
+      }
+    />
+  </div>
+</div>
+`;
