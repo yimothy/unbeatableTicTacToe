@@ -345,6 +345,7 @@ class AI {
     // Check if human can win in next move or trap in next move
     const enemy = letter === 'X' ? 'O' : 'X';
     const enemyWins = this.winNextMove(board, enemy);
+    console.log('BOARD:', board, 'ENEMY WINS: ', enemyWins, 'diag2: ', this.diags);
     const enemyTraps = this.findTraps(board, enemy);
     // If AI can win in next move, return the move.
     if (allyWins.length > 0) {
@@ -359,31 +360,31 @@ class AI {
       return allyTraps[0];
     }
     // If enemy can trap in 1 move, block that move.
-    else if (enemyTraps.length === 1) {
+    else if (enemyTraps.length > 0) {
       return enemyTraps[0];
     }
     return [];
   }
 
   AIMove(board) {
-    // this.readBoard(board);
+    this.readBoard(board);
     // Find all possible moves.
     const moves = this.possibleMoves(board);
     const prioritize = this.prioritizeMoves(board, this.letter);
     if (prioritize.length > 0) {
-      this.readMove(this.letter, prioritize[0], prioritize[1]);
       return prioritize;
     }
     if (moves.length > 0) {
       // If AI moves first, place X in a corner.
       if (moves.length === 9) {
-        console.log('MOVES LENGTH 9', moves.length);
-        this.readMove(this.letter, 0, 0);
-        return [0,0];
+        //Chose random corner to start
+        const idx = [0,2];
+        const randI = Math.floor(Math.random()*idx.length);
+        const randJ = Math.floor(Math.random()*idx.length);
+        return [idx[randI], idx[randJ]];
       }
       else if (moves.length === 7) {
         let nextMove = this.lookAhead(board);
-        console.log('LOOK AHEAD: ', nextMove);
         return nextMove;
       }
       // else if (moves.length === 8) {
@@ -391,7 +392,6 @@ class AI {
       // }
       // If AI moves second,
       const rand = Math.floor(Math.random() * moves.length);
-      this.readMove(this.letter, moves[rand][0], moves[rand][1]);
       return moves[rand];
     }
     return [];
