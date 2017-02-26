@@ -188,9 +188,47 @@ class AI {
     });
     return winIn2;
   }
-  // This function calculates the best move for the AI by creating a
-  // phantom board and predicting the human's next moves. Predict's the human's
-  // next moves by using the same prioritizeMoves function that the AI uses.
+  /* This function prioritizes moves in the following order:
+  1) AI win in next move,
+  2) Block a human win in next move,
+  3) Find a 2 way trap in the next move (where the AI would have 2 possible moves to win)
+  4) Find and block a human's 2 way trap in the next move
+  */
+  prioritizeMoves(board, letter) {
+    // Check if AI has wins in next move or traps in next move
+    const allyWins = this.winNextMove(board, letter);
+    const allyTraps = this.findTraps(board, letter);
+    // Check if human can win in next move or trap in next move
+    const enemy = letter === 'X' ? 'O' : 'X';
+    const enemyWins = this.winNextMove(board, enemy);
+    const enemyTraps = this.findTraps(board, enemy);
+    // If AI can win in next move, return the move.
+    if (allyWins.length > 0) {
+      let randIdx = Math.floor(Math.random() * allyWins.length);
+      return allyWins[randIdx];
+    } else if (enemyWins.length > 0) {
+      // If enemy can win in next move, block that move.
+      let randIdx = Math.floor(Math.random() * enemyWins.length);
+      return enemyWins[randIdx];
+    } else if (allyTraps.length > 0) {
+      // If AI can trap in 1 move, return that move.
+      let randIdx = Math.floor(Math.random() * allyTraps.length);
+      return allyTraps[randIdx];
+    } else if (enemyTraps.length === 1) {
+      // If enemy can trap in 1 move, block that move.
+      return enemyTraps[0];
+    }
+    return [];
+  }
+  /*
+  This function calculates the best move for the AI by creating a
+  phantom board and iterates through all possible moves while predicting
+  the human's next best moves. Predict's the human's next moves by using
+  the prioritizeMoves function that the AI uses. Including the phantom moves
+  in the findTrap and winNextMove functions, this function allows the AI to
+  look up to 4 phantom moves ahead and chooses the best move out of all
+  possible combinations.
+  */
   lookAhead(board) {
     const bestMove = [];
     const moves = this.possibleMoves(board);
@@ -279,39 +317,6 @@ class AI {
     return [];
   }
 
-  /* This function prioritizes:
-  1) AI win in next move,
-  2) Block a human win in next move,
-  3) Find a 2 way trap in the next move (where the AI would have 2 possible moves to win)
-  4) Find and block a human's 2 way trap in the next move
-  */
-  prioritizeMoves(board, letter) {
-    // Check if AI has wins in next move or traps in next move
-    const allyWins = this.winNextMove(board, letter);
-    const allyTraps = this.findTraps(board, letter);
-    // Check if human can win in next move or trap in next move
-    const enemy = letter === 'X' ? 'O' : 'X';
-    const enemyWins = this.winNextMove(board, enemy);
-    const enemyTraps = this.findTraps(board, enemy);
-    // If AI can win in next move, return the move.
-    if (allyWins.length > 0) {
-      let randIdx = Math.floor(Math.random() * allyWins.length);
-      return allyWins[randIdx];
-    } else if (enemyWins.length > 0) {
-      // If enemy can win in next move, block that move.
-      let randIdx = Math.floor(Math.random() * enemyWins.length);
-      return enemyWins[randIdx];
-    } else if (allyTraps.length > 0) {
-      // If AI can trap in 1 move, return that move.
-      let randIdx = Math.floor(Math.random() * allyTraps.length);
-      return allyTraps[randIdx];
-    } else if (enemyTraps.length === 1) {
-      // If enemy can trap in 1 move, block that move.
-      return enemyTraps[0];
-    }
-    return [];
-  }
-
   AIMove(board) {
     this.readBoard(board);
     // Find all possible moves.
@@ -327,8 +332,10 @@ class AI {
     // Edge case: when there are 2 potential traps in the next move.
     // This cannot be in the prioritizeMoves function.
     if (enemyTraps.length > 1 && threats.length > 0) {
-      // Choose a random threat (2-in-a-row)
-      const idx = Math.floor(Math.random() * threats.length);
+      // Choose a threat (2-in-a-row) on an edge
+      threats.forEach((threat) => {
+        if(threat[])
+      })
       return threats[idx];
     }
     // If there are still available moves
