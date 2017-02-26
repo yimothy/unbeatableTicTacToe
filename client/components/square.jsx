@@ -16,3 +16,9 @@ export default function Square(props) {
     </div>
   );
 }
+
+Square.propTypes = {
+  value: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+  ]),
+};

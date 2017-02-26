@@ -11,7 +11,7 @@ export default function Board(props) {
     left: '0',
     right: '0',
     bottom: '0',
-  }
+  };
 
   const renderSquares = () => {
     let key = 0;
@@ -29,3 +29,7 @@ export default function Board(props) {
     </div>
   );
 }
+
+Board.propTypes = {
+  board: React.PropTypes.array,
+};
