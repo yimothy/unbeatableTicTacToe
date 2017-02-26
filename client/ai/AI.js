@@ -348,18 +348,21 @@ class AI {
         if (board[0][1] || board[1][0] || board[1][2] || board[2][1]) {
           // Find the human's move
           let humanMove;
+          // Randomize which corner (next to the human) the AI will take
+          const random = [-1, 1];
+          const aiIdx = Math.floor(Math.random()*random.length);
           const edges = [[0, 1], [1, 0], [1, 2], [2, 1]];
           edges.forEach((edge) => {
             if (board[edge[0]][edge[1]]) {
               humanMove = edge;
             }
           });
-          // If human placed on top or bottom row, place move next to it
+          // If human placed in top or bottom row, place move next to it
           if (humanMove[0] === 0 || humanMove[0] === 2) {
-            return [humanMove[0], humanMove[1] - 1];
-          } else {
-            return [humanMove[0] - 1, humanMove[1]];
+            return [humanMove[0], humanMove[1] + random[aiIdx]];
           }
+          // Else if human placed in middle row, place move above or below.
+          return [humanMove[0] + random[aiIdx], humanMove[1]];
         } else if (!board[1][1]) {
           // Else if center is not taken, move there
           return [1, 1];

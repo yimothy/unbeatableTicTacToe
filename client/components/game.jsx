@@ -6,13 +6,14 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
-      turn: 0,
       versus: 'Human', // human or AI
       board: null, // Default starting board with no values
       xTurn: true,
       AITurn: false,
       humanLetter: null,
+      winningSquares: [],
     };
+    this.winningSquares = [];
     this.handleClick = this.handleClick.bind(this);
     this.versus = this.versus.bind(this);
   }
@@ -63,32 +64,32 @@ export default class Game extends Component {
     if (mode === 'AI1') {
       this.ai = new AI('X');
       this.setState({
-        turn: 0,
         versus: 'AI',
         board,
         xTurn: true,
         AITurn: true,
         humanLetter: 'O',
+        winningSquares: [],
       });
     // If human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
       this.ai = new AI('O');
       this.ai.readBoard(board);
       this.setState({
-        turn: 0,
         versus: 'AI',
         board,
         xTurn: true,
         AITurn: false,
         humanLetter: 'X',
+        winningSquares: [],
       });
     // if human vs human. Reset board.
     } else {
       this.setState({
-        turn: 0,
         versus: 'Human',
         board,
         xTurn: true,
+        winningSquares: [],
       });
     }
   }
@@ -114,15 +115,17 @@ export default class Game extends Component {
         xTurn: !this.state.xTurn,
         AITurn,
       });
-    }
+    };
   }
   // Function to check if anyone has won
   gameOver(board) {
     let gameOver = false;
+    let winningSquares = [];
     // Function to check rows if a player has won
     const checkRows = () => {
-      board.forEach((row) => {
+      board.forEach((row, i) => {
           if (row[0] && row[0] === row[1] && row[0] === row[2]) {
+            winningSquares = [[i, 0], [i, 1], [i, 2]];
             gameOver = true;
           }
       });
@@ -131,21 +134,26 @@ export default class Game extends Component {
     const checkCols = () => {
         for(let j = 0; j< board.length; j++) {
           if (board[0][j] && board[0][j] === board[1][j] && board[0][j] === board[2][j]) {
+            winningSquares = [[0, j], [1, j], [2, j]];
             gameOver = true;
           }
         }
     };
     // Function to check diagonals if a player has won
     const checkDiags = () => {
-      if ((board[0][0] && board[0][0] === board[1][1] && board[0][0] === board[2][2])
-      || (board[0][2] && board[0][2] === board[1][1] && board[0][2] === board[2][0])) {
+      if (board[0][0] && board[0][0] === board[1][1] && board[0][0] === board[2][2]) {
+        winningSquares = [[0, 0], [1, 1], [2, 2]];
+        gameOver = true;
+      }
+      if (board[0][2] && board[0][2] === board[1][1] && board[0][2] === board[2][0]) {
+        winningSquares = [[0, 2], [1, 1], [2, 0]];
         gameOver = true;
       }
     };
     checkRows(board);
     checkCols(board);
     checkDiags(board);
-
+    this.winningSquares = winningSquares;
     return gameOver;
   }
 
@@ -156,6 +164,7 @@ export default class Game extends Component {
       winner = this.state.xTurn ? 'O' : 'X';
     }
 
+    // console.log('WINNING SQUARES: ', this.winningSquares)
     return (
       <div>
         <h1>TIC TAC TOE</h1>
@@ -164,7 +173,7 @@ export default class Game extends Component {
         <button onClick={this.versus} value="Human">VS HUMAN</button>
         <button onClick={this.versus} value="AI2">VS AI (Human first)</button>
         <button onClick={this.versus} value="AI1">VS AI (AI first)</button>
-        <Board board={this.state.board} onClick={this.handleClick} />
+        <Board board={this.state.board} winningSquares={this.winningSquares} onClick={this.handleClick} />
       </div>
     );
   }
