@@ -47,19 +47,17 @@ class AI {
     // Add move to the select row, column, and diagonal
     this.rows[i][letter]++;
     this.cols[j][letter]++;
-    //if first diagonal
-    if(i === j) {
-      //if center
-      if(i === 1) {
+    // if first diagonal
+    if (i === j) {
+      // if center
+      if (i === 1) {
         this.diags[1][letter]++;
         this.diags[2][letter]++;
-      }
-      else{
+      } else {
         this.diags[1][letter]++;
       }
-    }
-    // if second diagonal
-    else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
+    } else if ((i === 2 && j === 0) || (i === 0 && j === 2)) {
+      // if second diagonal
       this.diags[2][letter]++;
     }
   }
@@ -230,26 +228,28 @@ class AI {
         phantomBoard[humanI][humanJ] = human;
         this.readMove(human, humanI, humanJ);
       }
-      /* AI now checks if it has any prioritized moves for it's 3rd move.
-      If so, place it on the phantomBoard and check to see if that move
-      guaranteed a win (if there are 2 winning next moves). Else, check to see
+      /* AI now checks if it has any prioritized moves for it's 3rd phantom move.
+      If so, place it on the phantomBoard and check to see if that phantom move
+      guaranteed a win (if there are 2 winning moves next turn). Else, check to see
       if there are any moves that will trap the opponent (a move that will
-      cause 2 winning next moves).
+      cause 2 winning moves in the subsequent round).
       */
       const prioritizeAI = this.prioritizeMoves(phantomBoard, this.letter);
       if (prioritizeAI.length > 0) {
         i3 = prioritizeAI[0];
         j3 = prioritizeAI[1];
+        // AI's tests a phantom move (prioritized) as it's 3rd move.
         phantomBoard[i3][j3] = this.letter;
         this.readMove(this.letter, i3, j3);
         let winMoves = this.winNextMove(phantomBoard, this.letter);
-        //Undo all readMoves and return the AI's second move
         if (winMoves.length > 1) {
+          //Undo all readMoves and return the AI's second move
           this.undoMove(this.letter, i2, j2);
           this.undoMove(this.letter, i3, j3);
           if(humanI !== null) {
             this.undoMove(human, humanI, humanJ);
           }
+          // Save the move. This move will lead to a guaranteed win.
           bestMove.push([i2,j2]);
         }
       } else {
@@ -259,6 +259,7 @@ class AI {
           if(humanI !== null) {
             this.undoMove(human, humanI, humanJ);
           }
+          // Save move. This move attempts to setup a trap in the next (3rd) move.
           bestMove.push([i2,j2]);
         }
       }

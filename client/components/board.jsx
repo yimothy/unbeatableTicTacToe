@@ -4,8 +4,8 @@ import Square from './square.jsx';
 export default function Board(props) {
   const board = props.board;
   const style = {
-    width: '50vw',
-    height: '50vw',
+    width: '35vw',
+    height: '35vw',
     margin: 'auto',
     top: '0',
     left: '0',
