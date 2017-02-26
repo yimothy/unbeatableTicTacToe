@@ -1,6 +1,172 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Board renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "bottom": "0",
+      "display": "flex",
+      "flexFlow": "row wrap",
+      "height": "35vw",
+      "left": "0",
+      "margin": "auto",
+      "minHeight": "310px",
+      "minWidth": "310px",
+      "right": "0",
+      "top": "0",
+      "width": "35vw",
+    }
+  }
+>
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#97d87d",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  >
+    X
+  </div>
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  />
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  >
+    O
+  </div>
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  />
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#97d87d",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  >
+    X
+  </div>
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  />
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  >
+    O
+  </div>
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "white",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  />
+  <div
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#97d87d",
+        "border": "2px solid #dae5bc",
+        "float": "left",
+        "fontFamily": "Nunito, sans-serif",
+        "fontSize": "calc(50px + 4.5vw)",
+        "height": "32%",
+        "textAlign": "center",
+        "width": "32%",
+      }
+    }
+  >
+    X
+  </div>
+</div>
+`;
+
+exports[`Game renders correctly 1`] = `
 <div
   style={
     Object {
@@ -209,5 +375,25 @@ exports[`renders correctly 1`] = `
       }
     />
   </div>
+</div>
+`;
+
+exports[`Square renders correctly 1`] = `
+<div
+  onClick={[Function]}
+  style={
+    Object {
+      "backgroundColor": "white",
+      "border": "2px solid #dae5bc",
+      "float": "left",
+      "fontFamily": "Nunito, sans-serif",
+      "fontSize": "calc(50px + 4.5vw)",
+      "height": "32%",
+      "textAlign": "center",
+      "width": "32%",
+    }
+  }
+>
+  X
 </div>
 `;

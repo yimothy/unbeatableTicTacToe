@@ -113,7 +113,7 @@ export default class Game extends Component {
         xTurn: !this.state.xTurn,
         AITurn,
       });
-    };
+    }
   }
   // Function to check if anyone has won
   gameOver(board) {
@@ -130,7 +130,7 @@ export default class Game extends Component {
     };
     // Function to check columns if a player has won
     const checkCols = () => {
-        for(let j = 0; j< board.length; j++) {
+        for(let j = 0; j < board.length; j++) {
           if (board[0][j] && board[0][j] === board[1][j] && board[0][j] === board[2][j]) {
             winningSquares = [[0, j], [1, j], [2, j]];
             gameOver = true;
@@ -180,21 +180,15 @@ export default class Game extends Component {
     && this.state.versus === 'AI') {
       humanMove = ' | MAKE A MOVE!'
     }
-    if(this.state.versus === 'Human') {
+    if (this.state.versus === 'Human') {
       humanMove = ' | ' + turn + ' Turn';
     }
-    // if (this.gameOver(this.state.board)) {
-    //   const letter = this.state.xTurn ? 'O' : 'X';
-    //   winner = letter + ' WON!';
-    // } else if(this.state.turn === 9) {
-    //   winner = 'DRAW!';
-    // }
 
     return (
       <div style={styles.app}>
         <div style={styles.header}>
           <h1>IMPOSSIBLE TIC TAC TOE</h1>
-          <div>PLAYING AGAINST: {versus} <span>{humanMove}</span></div>
+          <div>PLAYING AGAINST: </strong>{versus} <span>{humanMove}</span></div>
           <div>CHOOSE YOUR ENEMY: <span> </span>
             <button onClick={this.versus} value="Human">HUMAN</button>
             <button onClick={this.versus} value="AI1">AI goes first</button>
