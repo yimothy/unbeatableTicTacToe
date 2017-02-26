@@ -2,34 +2,8 @@ class AI {
   constructor(letter) {
     // The letter of the AI
     this.letter = letter;
-    // Each number represents a row
-    this.rows = {
-      0: {'X': 0,
-          'O': 0},
-      1: {'X': 0,
-          'O': 0},
-      2: {'X': 0,
-          'O': 0},
-    };
-    // Each number represents a column
-    this.cols = {
-      0: {'X': 0,
-          'O': 0},
-      1: {'X': 0,
-          'O': 0},
-      2: {'X': 0,
-          'O': 0},
-    };
-    // Diagonsals = 1: [0,0], [1,1], [2,2]
-    // 2: [0,2], [1,1], [2,0]
-    this.diags = {
-      1: {'X': 0,
-          'O': 0},
-      2: {'X': 0,
-          'O': 0},
-    }
   }
-  //Function to read board and translate into rows / cols / diags
+  // Function to read board and translate into rows / cols / diags
   readBoard(board) {
     this.rows = {
     // Each number represents a row
@@ -66,7 +40,7 @@ class AI {
       }
     }
   }
-  // Read the move and add to this.rows / this.cols / this.diags
+  // Function to read single move and add to this.rows / this.cols / this.diags
   readMove(letter, i, j) {
     // Letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -88,7 +62,7 @@ class AI {
       this.diags[2][letter]++;
     }
   }
-  // Read the move and undo from this.rows / this.cols / this.diags
+  // Undo the move from this.rows / this.cols / this.diags
   undoMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -132,8 +106,8 @@ class AI {
       const j = move[1];
       phantomBoard[i][j] = this.letter;
       const winNextMove = this.winNextMove(phantomBoard, this.letter);
-      if(winNextMove) {
-        threats.push([i,j]);
+      if (winNextMove) {
+        threats.push([i, j]);
       }
     });
     return threats;
@@ -142,13 +116,13 @@ class AI {
   winNextMove(board, letter) {
     const other = letter === 'X' ? 'O' : 'X';
     const winMoves = [];
-    //Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
+    // Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
     for (const row in this.rows) {
       // console.log('ROW: ', row)
       if (this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
         // Find the move that will end the game
         const j = board[row].indexOf(false);
-        if(j > -1) {
+        if (j > -1) {
           const i = parseInt(row);
           winMoves.push([i, j]);
         }
@@ -193,7 +167,7 @@ class AI {
     }
     return winMoves;
   }
-  //Looks for moves that would guarantee win in 2 moves
+  // Looks for moves that would guarantee win in 2 moves
   findTraps(board, letter) {
     const moves = this.possibleMoves(board);
     const winIn2 = [];
@@ -213,18 +187,17 @@ class AI {
       // UnToggle AI's phantom move
       this.undoMove(letter, i, j);
     });
-    if(winIn2.length > 0) console.log(letter, 'TRAPS: ', winIn2 )
     return winIn2;
   }
+  // This function calculates the best move for the AI by creating a
+  // phantom board and predicting the human's next moves. Predict's the human's
+  // next moves by using the same prioritizeMoves function that the AI uses.
   lookAhead(board) {
     const bestMove = [];
     const moves = this.possibleMoves(board);
     const human = this.letter === 'X' ? 'O' : 'X';
     // Iterate through each move, save moves that have best chance of winning
     moves.forEach((move) => {
-      let arows = this.rows;
-      let cols = this.cols;
-      let diags = this.diags;
       // Create a phantom board for AI to test it's 2nd move
       const phantomBoard = board.map(row => row.slice());
       const i2 = move[0];
@@ -236,12 +209,8 @@ class AI {
       let i3 = null;
       let j3 = null;
       // Toggle AI to read next move
-      // this.readBoard(phantomBoard);
-      // console.log('PREBOARD READ: ', this.rows, 'preboard: ', phantomBoard, 'board: ', board);
       phantomBoard[i2][j2] = this.letter;
       this.readMove(this.letter, i2, j2);
-      // this.readBoard(phantomBoard);
-      console.log('phboard: ', phantomBoard, 'ROWS: ', this.rows);
       /* Predict human's next move
        Prioritizes moves based on:
        1) Any moves that the prioritizeMoves function returns
@@ -268,27 +237,22 @@ class AI {
       */
       const prioritizeAI = this.prioritizeMoves(phantomBoard, this.letter);
       if (prioritizeAI.length > 0) {
-        console.log('phantomBoard in if: ', phantomBoard);
         i3 = prioritizeAI[0];
         j3 = prioritizeAI[1];
         phantomBoard[i3][j3] = this.letter;
         this.readMove(this.letter, i3, j3);
         let winMoves = this.winNextMove(phantomBoard, this.letter);
-        console.log('WIN MOVES: ', winMoves)
         //Undo all readMoves and return the AI's second move
         if (winMoves.length > 1) {
-          console.log('IN WIN MOVES:', winMoves)
           this.undoMove(this.letter, i2, j2);
           this.undoMove(this.letter, i3, j3);
           if(humanI !== null) {
             this.undoMove(human, humanI, humanJ);
           }
-          console.log('WIN MOVES 2ND MOVE: ', i2, j2);
           bestMove.push([i2,j2]);
         }
       } else {
         let trapMoves = this.findTraps(phantomBoard, this.letter);
-        console.log('phantomBoard in else: ', phantomBoard, 'rows: ', this.rows, 'trapmoves: ', trapMoves);
         if (trapMoves.length > 0) {
           this.undoMove(this.letter, i2, j2);
           if(humanI !== null) {
@@ -305,32 +269,11 @@ class AI {
         this.undoMove(human, humanI, humanJ);
       }
     })
-    console.log('FOR EACH OVER');
     if(bestMove.length > 0) {
       return bestMove[0];
     }
     return [];
   }
-  // genericMove(board) {
-  //   const moves = this.possibleMoves(board);
-  //   // See if AI moves first (# moves are odd) or second (# moves are even).
-  //   // Depending on which, will prioritize moves differently
-  //   if (moves % 2 === 1) {
-  //
-  //   }
-  //   /* If the AI moves second, it will prioritize:
-  //   1) Center,
-  //   2) Corner,
-  //   3) Edge
-  //   */
-  //   else {
-  //     // If the center is empty, move there
-  //     if (!board[1][1]) {
-  //       return board[1][1];
-  //     }
-  //     else if()
-  //   }
-  // }
 
   /* This function prioritizes:
   1) AI win in next move,
@@ -339,7 +282,6 @@ class AI {
   4) Find and block a human's 2 way trap in the next move
   */
   prioritizeMoves(board, letter) {
-    let rows = this.rows;
     // Check if AI has wins in next move or traps in next move
     const allyWins = this.winNextMove(board, letter);
     const allyTraps = this.findTraps(board, letter);
@@ -350,17 +292,14 @@ class AI {
     // If AI can win in next move, return the move.
     if (allyWins.length > 0) {
       return allyWins[0];
-    }
-    // If enemy can win in next move, block that move.
-    else if (enemyWins.length > 0) {
+    } else if (enemyWins.length > 0) {
+      // If enemy can win in next move, block that move.
       return enemyWins[0];
-    }
-    // If AI can trap in 1 move, return that move.
-    else if (allyTraps.length > 0) {
+    } else if (allyTraps.length > 0) {
+      // If AI can trap in 1 move, return that move.
       return allyTraps[0];
-    }
-    // If enemy can trap in 1 move, block that move.
-    else if (enemyTraps.length === 1) {
+    } else if (enemyTraps.length === 1) {
+      // If enemy can trap in 1 move, block that move.
       return enemyTraps[0];
     }
     return [];
@@ -382,7 +321,7 @@ class AI {
     // This cannot be in the prioritizeMoves function.
     if (enemyTraps.length > 1 && threats.length > 0) {
       // Choose a random threat (2-in-a-row)
-      let idx = Math.floor(Math.random() * threats.length);
+      const idx = Math.floor(Math.random() * threats.length);
       return threats[idx];
     }
     // If there are still available moves
@@ -390,27 +329,31 @@ class AI {
       // If AI moves first, place X in a corner.
       if (moves.length === 9) {
         // Choose random corner to start
-        const idx = [0,2];
-        const randI = Math.floor(Math.random()*idx.length);
-        const randJ = Math.floor(Math.random()*idx.length);
+        const idx = [0, 2];
+        const randI = Math.floor(Math.random() * idx.length);
+        const randJ = Math.floor(Math.random() * idx.length);
         return [idx[randI], idx[randJ]];
       } else if (moves.length === 8) {
         // If AI moves second, choose the center if available, else a corner
         if (!board[1][1]) {
-          return [1,1];
+          return [1, 1];
         }
-          const idx = [0,2];
-          const randI = Math.floor(Math.random()*idx.length);
-          const randJ = Math.floor(Math.random()*idx.length);
-          return [idx[randI], idx[randJ]];
-      } else if (moves.length === 7 || moves.length === 6) {
+        const idx = [0, 2];
+        const randI = Math.floor(Math.random() * idx.length);
+        const randJ = Math.floor(Math.random() * idx.length);
+        return [idx[randI], idx[randJ]];
+      } else if (moves.length <= 7) {
         // On AI's second move, use lookAhead function to calculate the best
         // move by predicting the human's next 2 moves.
-        let nextMove = this.lookAhead(board);
-        return nextMove;
+        const nextMove = this.lookAhead(board);
+        if (nextMove) {
+          return nextMove;
+        } else {
+          // If no best moves, return random move.
+          const rand = Math.floor(Math.random() * moves.length);
+          return moves[rand];
+        }
       }
-      const rand = Math.floor(Math.random() * moves.length);
-      return moves[rand];
     }
     // If there are no moves, then the match is a draw.
     return [];
