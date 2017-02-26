@@ -2,8 +2,8 @@ class AI {
   constructor(letter) {
     // The letter of the AI
     this.letter = letter;
-    this.rows = {
     // Each number represents a row
+    this.rows = {
       0: {'X': 0,
           'O': 0},
       1: {'X': 0,
@@ -11,8 +11,8 @@ class AI {
       2: {'X': 0,
           'O': 0},
     };
-    this.cols = {
     // Each number represents a column
+    this.cols = {
       0: {'X': 0,
           'O': 0},
       1: {'X': 0,
@@ -29,28 +29,7 @@ class AI {
           'O': 0},
     }
   }
-  // Read the move and add to this.rows / this.cols / this.diags
-  readMove(letter, i, j) {
-    // letter variable represents letter played, 'X' or 'O'
-    // Add move to the select row, column, and diagonal
-    this.rows[i][letter]++;
-    this.cols[j][letter]++;
-    //if first diagonal
-    if(i === j) {
-      //if center
-      if(i === 1) {
-        this.diags[1][letter]++;
-        this.diags[2][letter]++;
-      }
-      else{
-        this.diags[1][letter]++;
-      }
-    }
-    // if second diagonal
-    else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
-      this.diags[2][letter]++;
-    }
-  }
+  //Function to read board and translate into rows / cols / diags
   readBoard(board) {
     this.rows = {
     // Each number represents a row
@@ -88,6 +67,28 @@ class AI {
     }
   }
   // Read the move and add to this.rows / this.cols / this.diags
+  readMove(letter, i, j) {
+    // Letter variable represents letter played, 'X' or 'O'
+    // Add move to the select row, column, and diagonal
+    this.rows[i][letter]++;
+    this.cols[j][letter]++;
+    //if first diagonal
+    if(i === j) {
+      //if center
+      if(i === 1) {
+        this.diags[1][letter]++;
+        this.diags[2][letter]++;
+      }
+      else{
+        this.diags[1][letter]++;
+      }
+    }
+    // if second diagonal
+    else if((i === 2 && j === 0) || (i === 0 && j === 2)) {
+      this.diags[2][letter]++;
+    }
+  }
+  // Read the move and undo from this.rows / this.cols / this.diags
   undoMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -121,7 +122,7 @@ class AI {
     }
     return moves;
   }
-  //Finds all possible paths for 2 in a row (a threat)
+  // Finds all possible paths for 2 in a row (a threat)
   createThreat(board) {
     const threats = [];
     const moves = this.possibleMoves(board);
@@ -131,7 +132,6 @@ class AI {
       const j = move[1];
       phantomBoard[i][j] = this.letter;
       const winNextMove = this.winNextMove(phantomBoard, this.letter);
-      console.log('WIN NEXT MOVE:', winNextMove)
       if(winNextMove) {
         threats.push([i,j]);
       }
@@ -331,6 +331,7 @@ class AI {
   //     else if()
   //   }
   // }
+
   /* This function prioritizes:
   1) AI win in next move,
   2) Block a human win in next move,
@@ -345,7 +346,6 @@ class AI {
     // Check if human can win in next move or trap in next move
     const enemy = letter === 'X' ? 'O' : 'X';
     const enemyWins = this.winNextMove(board, enemy);
-    console.log('BOARD:', board, 'ENEMY WINS: ', enemyWins, 'diag2: ', this.diags);
     const enemyTraps = this.findTraps(board, enemy);
     // If AI can win in next move, return the move.
     if (allyWins.length > 0) {
@@ -360,7 +360,7 @@ class AI {
       return allyTraps[0];
     }
     // If enemy can trap in 1 move, block that move.
-    else if (enemyTraps.length > 0) {
+    else if (enemyTraps.length === 1) {
       return enemyTraps[0];
     }
     return [];
@@ -369,31 +369,50 @@ class AI {
   AIMove(board) {
     this.readBoard(board);
     // Find all possible moves.
+    const enemy = this.letter === 'X' ? 'O' : 'X';
+    const enemyTraps = this.findTraps(board, enemy);
+    const threats = this.createThreat(board);
     const moves = this.possibleMoves(board);
     const prioritize = this.prioritizeMoves(board, this.letter);
+
     if (prioritize.length > 0) {
       return prioritize;
     }
+    // Edge case: when there are 2 potential traps in the next move.
+    // This cannot be in the prioritizeMoves function.
+    if (enemyTraps.length > 1 && threats.length > 0) {
+      // Choose a random threat (2-in-a-row)
+      let idx = Math.floor(Math.random() * threats.length);
+      return threats[idx];
+    }
+    // If there are still available moves
     if (moves.length > 0) {
       // If AI moves first, place X in a corner.
       if (moves.length === 9) {
-        //Chose random corner to start
+        // Choose random corner to start
         const idx = [0,2];
         const randI = Math.floor(Math.random()*idx.length);
         const randJ = Math.floor(Math.random()*idx.length);
         return [idx[randI], idx[randJ]];
-      }
-      else if (moves.length === 7) {
+      } else if (moves.length === 8) {
+        // If AI moves second, choose the center if available, else a corner
+        if (!board[1][1]) {
+          return [1,1];
+        }
+          const idx = [0,2];
+          const randI = Math.floor(Math.random()*idx.length);
+          const randJ = Math.floor(Math.random()*idx.length);
+          return [idx[randI], idx[randJ]];
+      } else if (moves.length === 7 || moves.length === 6) {
+        // On AI's second move, use lookAhead function to calculate the best
+        // move by predicting the human's next 2 moves.
         let nextMove = this.lookAhead(board);
         return nextMove;
       }
-      // else if (moves.length === 8) {
-      //   return [1,1];
-      // }
-      // If AI moves second,
       const rand = Math.floor(Math.random() * moves.length);
       return moves[rand];
     }
+    // If there are no moves, then the match is a draw.
     return [];
   }
 }
