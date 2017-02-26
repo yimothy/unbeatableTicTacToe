@@ -347,16 +347,21 @@ class AI {
         // On AI's second move, use lookAhead function to calculate the best
         // move by predicting the human's next 2 moves.
         const nextMove = this.lookAhead(board);
-        if (nextMove) {
+        if (nextMove.length > 0) {
           return nextMove;
+        } else if (threats.length > 0) {
+          // If no best moves, return random threat.
+          const idx = Math.floor(Math.random() * threats.length);
+          return threats[idx];
         } else {
-          // If no best moves, return random move.
+          // If no threats, return random move.
           const rand = Math.floor(Math.random() * moves.length);
           return moves[rand];
         }
       }
     }
     // If there are no moves, then the match is a draw.
+    console.log('NO MOVES');
     return [];
   }
 }
