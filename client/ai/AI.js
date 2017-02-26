@@ -341,10 +341,30 @@ class AI {
         const randJ = Math.floor(Math.random() * idx.length);
         return [idx[randI], idx[randJ]];
       } else if (moves.length === 8) {
-        // If AI moves second, choose the center if available, else a corner
-        if (!board[1][1]) {
+        // If AI moves second, AI will choose:
+        // 1) If human chose edge, a corner next to it
+        // 2) The center if available
+        // 3) A random corner
+        if (board[0][1] || board[1][0] || board[1][2] || board[2][1]) {
+          // Find the human's move
+          let humanMove;
+          const edges = [[0, 1], [1, 0], [1, 2], [2, 1]];
+          edges.forEach((edge) => {
+            if (board[edge[0]][edge[1]]) {
+              humanMove = edge;
+            }
+          });
+          // If human placed on top or bottom row, place move next to it
+          if (humanMove[0] === 0 || humanMove[0] === 2) {
+            return [humanMove[0], humanMove[1] - 1];
+          } else {
+            return [humanMove[0] - 1, humanMove[1]];
+          }
+        } else if (!board[1][1]) {
+          // Else if center is not taken, move there
           return [1, 1];
         }
+        // Else move to a random corner
         const idx = [0, 2];
         const randI = Math.floor(Math.random() * idx.length);
         const randJ = Math.floor(Math.random() * idx.length);
