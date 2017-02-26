@@ -8,7 +8,7 @@ export default function Square(props) {
     float: 'left',
     fontSize: '14vw',
     textAlign: 'center',
-    fontFamily: 'Baloo',
+    fontFamily: 'Ubuntu',
   };
   return (
     <div style={style} onClick={() => props.onClick()}>

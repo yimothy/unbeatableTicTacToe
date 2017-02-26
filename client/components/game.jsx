@@ -75,6 +75,7 @@ export default class Game extends Component {
     // if human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
       this.ai = new AI('O');
+      this.ai.readBoard(board);
       this.setState({
         turn: 0,
         versus: 'AI',

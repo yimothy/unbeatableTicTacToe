@@ -5,6 +5,7 @@ class AI {
   }
   // Function to read board and translate into rows / cols / diags
   readBoard(board) {
+    // Reset count
     this.rows = {
     // Each number represents a row
       0: {'X': 0,
