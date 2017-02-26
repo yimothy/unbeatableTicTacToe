@@ -271,7 +271,9 @@ class AI {
       }
     })
     if(bestMove.length > 0) {
-      return bestMove[0];
+      // Select a random best move if there is more than one
+      const randIdx = Math.floor(Math.random() * bestMove.length);
+      return bestMove[randIdx];
     }
     return [];
   }
@@ -292,13 +294,16 @@ class AI {
     const enemyTraps = this.findTraps(board, enemy);
     // If AI can win in next move, return the move.
     if (allyWins.length > 0) {
-      return allyWins[0];
+      let randIdx = Math.floor(Math.random() * allyWins.length);
+      return allyWins[randIdx];
     } else if (enemyWins.length > 0) {
       // If enemy can win in next move, block that move.
-      return enemyWins[0];
+      let randIdx = Math.floor(Math.random() * enemyWins.length);
+      return enemyWins[randIdx];
     } else if (allyTraps.length > 0) {
       // If AI can trap in 1 move, return that move.
-      return allyTraps[0];
+      let randIdx = Math.floor(Math.random() * allyTraps.length);
+      return allyTraps[randIdx];
     } else if (enemyTraps.length === 1) {
       // If enemy can trap in 1 move, block that move.
       return enemyTraps[0];
@@ -353,15 +358,13 @@ class AI {
           // If no best moves, return random threat.
           const idx = Math.floor(Math.random() * threats.length);
           return threats[idx];
-        } else {
-          // If no threats, return random move.
-          const rand = Math.floor(Math.random() * moves.length);
-          return moves[rand];
         }
+        // If no best moves or threats, return random move.
+        const rand = Math.floor(Math.random() * moves.length);
+        return moves[rand];
       }
     }
     // If there are no moves, then the match is a draw.
-    console.log('NO MOVES');
     return [];
   }
 }
