@@ -42,6 +42,8 @@ class AI {
     }
   }
   // Function to read single move and add to this.rows / this.cols / this.diags
+  // This function is used for both the readBoard function and to toggle moves
+  // in the phantomBoard.
   readMove(letter, i, j) {
     // Letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -61,7 +63,8 @@ class AI {
       this.diags[2][letter]++;
     }
   }
-  // Undo the move from this.rows / this.cols / this.diags
+  // Undo the move from this.rows / this.cols / this.diags. This function is
+  // used to untoggle moves from any phantomBoards.
   undoMove(letter, i, j) {
     // letter variable represents letter played, 'X' or 'O'
     // Add move to the select row, column, and diagonal
@@ -166,7 +169,7 @@ class AI {
     }
     return winMoves;
   }
-  // Looks for moves that would guarantee win in 2 moves
+  // Looks for moves that would guarantee win in 2 moves (a "trap")
   findTraps(board, letter) {
     const moves = this.possibleMoves(board);
     const winIn2 = [];
@@ -222,12 +225,12 @@ class AI {
   }
   /*
   This function calculates the best move for the AI by creating a
-  phantom board and iterates through all possible moves while predicting
-  the human's next best moves. Predict's the human's next moves by using
-  the prioritizeMoves function that the AI uses. Including the phantom moves
-  in the findTrap and winNextMove functions, this function allows the AI to
-  look up to 4 phantom moves ahead and chooses the best move out of all
-  possible combinations.
+  phantom board and iterating through all possible moves up to 4 moves ahead.
+  It predict's the human's next best moves and uses that information to find it's
+  own best move. It predict's the human's next moves by using the prioritizeMoves
+  function that the AI uses. Including the phantom moves in the findTrap and
+  winNextMove functions, this function allows the AI to look up to 4 phantom moves
+  ahead and chooses the best move out of all possible combinations.
   */
   lookAhead(board) {
     const bestMove = [];
@@ -248,7 +251,8 @@ class AI {
       // Toggle AI to read next move
       phantomBoard[i2][j2] = this.letter;
       this.readMove(this.letter, i2, j2);
-      /* Predict human's next move
+      /*
+       Predict human's next move
        Prioritizes moves based on:
        1) Any moves that the prioritizeMoves function returns
        2) Center
@@ -266,7 +270,8 @@ class AI {
         phantomBoard[humanI][humanJ] = human;
         this.readMove(human, humanI, humanJ);
       }
-      /* AI now checks if it has any prioritized moves for it's 3rd phantom move.
+      /*
+      AI now checks if it has any prioritized moves for it's next phantom move.
       If so, place it on the phantomBoard and check to see if that phantom move
       guaranteed a win (if there are 2 winning moves next turn). Else, check to see
       if there are any moves that will trap the opponent (a move that will
@@ -279,6 +284,8 @@ class AI {
         // AI's tests a phantom move (prioritized) as it's 3rd move.
         phantomBoard[i3][j3] = this.letter;
         this.readMove(this.letter, i3, j3);
+        // Check to see that phantom move created a trap (guaranteed win). If so,
+        // return that move.
         let winMoves = this.winNextMove(phantomBoard, this.letter);
         if (winMoves.length > 1) {
           //Undo all readMoves and return the AI's second move
@@ -297,10 +304,11 @@ class AI {
           if(humanI !== null) {
             this.undoMove(human, humanI, humanJ);
           }
-          // Save move. This move attempts to setup a trap in the next (3rd) move.
+          // Save move. This move attempts to setup a trap in the following move.
           bestMove.push([i2,j2]);
         }
       }
+      // Untoggle all moves from the phantomBoard
       this.undoMove(this.letter, i2, j2);
       if (i3 !== null) {
         this.undoMove(this.letter, i3, j3);
@@ -309,7 +317,7 @@ class AI {
         this.undoMove(human, humanI, humanJ);
       }
     })
-    if(bestMove.length > 0) {
+    if (bestMove.length > 0) {
       // Select a random best move if there is more than one
       const randIdx = Math.floor(Math.random() * bestMove.length);
       return bestMove[randIdx];

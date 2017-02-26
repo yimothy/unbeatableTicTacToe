@@ -2259,7 +2259,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n
 /***/ (function(module, __webpack_exports__) {
 
 "use strict";
-eval("throw new Error(\"Module parse failed: /Users/tim/Desktop/Coding Challenges/unbeatableTicTacToe/client/ai/AI.js Unexpected token (337:18)\\nYou may need an appropriate loader to handle this file type.\\n|       // Choose a threat (2-in-a-row) on an edge\\n|       threats.forEach((threat) => {\\n|         if(threat[])\\n|       })\\n|       return threats[idx];\");//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMTgyLmpzIiwic291cmNlcyI6W10sIm1hcHBpbmdzIjoiIiwic291cmNlUm9vdCI6IiJ9");
+eval("throw new Error(\"Module parse failed: /Users/tim/Desktop/Coding Challenges/unbeatableTicTacToe/client/ai/AI.js Unexpected token (345:18)\\nYou may need an appropriate loader to handle this file type.\\n|       // Choose a threat (2-in-a-row) on an edge\\n|       threats.forEach((threat) => {\\n|         if(threat[])\\n|       })\\n|       return threats[idx];\");//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMTgyLmpzIiwic291cmNlcyI6W10sIm1hcHBpbmdzIjoiIiwic291cmNlUm9vdCI6IiJ9");
 
 /***/ })
 /******/ ]);
