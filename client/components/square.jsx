@@ -4,11 +4,12 @@ export default function Square(props) {
   const style = {
     width: '10vw',
     height: '10vw',
-    border: '2px solid black',
+    border: '2px solid #dae5bc',
+    backgroundColor: 'white',
     float: 'left',
-    fontSize: '9vw',
+    fontSize: '8vw',
     textAlign: 'center',
-    fontFamily: 'Ubuntu',
+    fontFamily: 'Nunito, sans-serif',
   };
   return (
     <div style={style} onClick={() => props.onClick()}>
