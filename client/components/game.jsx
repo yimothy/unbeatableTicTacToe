@@ -11,7 +11,8 @@ export default class Game extends Component {
       xTurn: true,
       AITurn: false,
       humanLetter: null,
-      winningSquares: [],
+      turn: 0,
+      draw: false,
     };
     this.winningSquares = [];
     this.handleClick = this.handleClick.bind(this);
@@ -44,7 +45,8 @@ export default class Game extends Component {
           board: newBoard,
           xTurn: !this.state.xTurn,
           AITurn: !this.state.AITurn,
-        })
+          turn: this.state.turn++,
+        });
       }
     }
   }
@@ -69,7 +71,7 @@ export default class Game extends Component {
         xTurn: true,
         AITurn: true,
         humanLetter: 'O',
-        winningSquares: [],
+        turn: 0,
       });
     // If human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
@@ -81,7 +83,7 @@ export default class Game extends Component {
         xTurn: true,
         AITurn: false,
         humanLetter: 'X',
-        winningSquares: [],
+        turn: 0,
       });
     // if human vs human. Reset board.
     } else {
@@ -89,7 +91,7 @@ export default class Game extends Component {
         versus: 'Human',
         board,
         xTurn: true,
-        winningSquares: [],
+        turn: 0,
       });
     }
   }
@@ -114,6 +116,7 @@ export default class Game extends Component {
         board: newBoard,
         xTurn: !this.state.xTurn,
         AITurn,
+        turn: this.state.turn++,
       });
     };
   }
@@ -158,22 +161,56 @@ export default class Game extends Component {
   }
 
   render() {
-    let winner;
+    const styles = {
+      app: {
+        fontFamily: 'Nunito, sans-serif',
+        width: '100vw',
+      },
+      header: {
+        width: '35vw',
+        minWidth: '310px',
+        margin: 'auto',
+        left: '0',
+        right: '0',
+      },
+    };
+    // let winner;
     const versus = this.state.versus;
-    if (this.gameOver(this.state.board)) {
-      winner = this.state.xTurn ? 'O' : 'X';
+    let turn = this.state.xTurn ? 'X' : 'O';
+    let humanMove = '';
+    this.gameOver(this.state.board)
+    //Tell human to move
+    if (((this.state.humanLetter === 'X' && this.state.xTurn)
+    || (this.state.humanLetter === 'O' && !this.state.xTurn))
+    && this.state.versus === 'AI') {
+      humanMove = ' | MAKE A MOVE!'
     }
+    if(this.state.versus === 'Human') {
+      humanMove = ' | ' + turn + ' Turn';
+    }
+    // if (this.gameOver(this.state.board)) {
+    //   const letter = this.state.xTurn ? 'O' : 'X';
+    //   winner = letter + ' WON!';
+    // } else if(this.state.turn === 9) {
+    //   winner = 'DRAW!';
+    // }
 
-    // console.log('WINNING SQUARES: ', this.winningSquares)
     return (
-      <div>
-        <h1>TIC TAC TOE</h1>
-        <div>WINNER: {winner}</div>
-        <div>PLAYING AGAINST: {versus}</div>
-        <button onClick={this.versus} value="Human">VS HUMAN</button>
-        <button onClick={this.versus} value="AI2">VS AI (Human first)</button>
-        <button onClick={this.versus} value="AI1">VS AI (AI first)</button>
-        <Board board={this.state.board} winningSquares={this.winningSquares} onClick={this.handleClick} />
+      <div style={styles.app}>
+        <div style={styles.header}>
+          <h1>IMPOSSIBLE TIC TAC TOE</h1>
+          <div>PLAYING AGAINST: {versus} <span>{humanMove}</span></div>
+          <div>CHOOSE YOUR ENEMY: <span> </span>
+            <button onClick={this.versus} value="Human">HUMAN</button>
+            <button onClick={this.versus} value="AI1">AI goes first</button>
+            <button onClick={this.versus} value="AI2">AI goes second</button>
+          </div>
+        </div>
+        <Board
+          board={this.state.board}
+          winningSquares={this.winningSquares}
+          onClick={this.handleClick}
+        />
       </div>
     );
   }

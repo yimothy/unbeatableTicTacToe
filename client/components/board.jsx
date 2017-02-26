@@ -4,10 +4,13 @@ import Square from './square.jsx';
 export default function Board(props) {
   const board = props.board;
   const winningSquares = props.winningSquares;
-  console.log('winningSquares ', winningSquares)
   const style = {
+    display: 'flex',
+    flexFlow: 'row wrap',
     width: '35vw',
+    minWidth: '310px',
     height: '35vw',
+    minHeight: '310px',
     margin: 'auto',
     top: '0',
     left: '0',
