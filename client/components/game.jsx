@@ -11,7 +11,6 @@ export default class Game extends Component {
       xTurn: true,
       AITurn: false,
       humanLetter: null,
-      turn: 0,
       draw: false,
     };
     this.winningSquares = [];
@@ -45,7 +44,6 @@ export default class Game extends Component {
           board: newBoard,
           xTurn: !this.state.xTurn,
           AITurn: !this.state.AITurn,
-          turn: this.state.turn++,
         });
       }
     }
@@ -71,7 +69,6 @@ export default class Game extends Component {
         xTurn: true,
         AITurn: true,
         humanLetter: 'O',
-        turn: 0,
       });
     // If human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
@@ -83,7 +80,6 @@ export default class Game extends Component {
         xTurn: true,
         AITurn: false,
         humanLetter: 'X',
-        turn: 0,
       });
     // if human vs human. Reset board.
     } else {
@@ -91,7 +87,7 @@ export default class Game extends Component {
         versus: 'Human',
         board,
         xTurn: true,
-        turn: 0,
+        AITurn: false,
       });
     }
   }
@@ -116,7 +112,6 @@ export default class Game extends Component {
         board: newBoard,
         xTurn: !this.state.xTurn,
         AITurn,
-        turn: this.state.turn++,
       });
     };
   }

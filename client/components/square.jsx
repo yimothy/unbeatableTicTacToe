@@ -27,15 +27,14 @@ export default function Square(props) {
   return (
     <div style={style} onClick={() => props.onClick()}>
       {props.value}
-
     </div>
   );
 }
-// <svg width="100%" height="100%" viewBox="0 0 13 15">
-//   <text x="0" y="13">{props.value}</text>
-// </svg>
-// Square.propTypes = {
-//   value: React.PropTypes.oneOfType([
-//     React.PropTypes.string,
-//   ]),
-// };
+
+Square.propTypes = {
+  value: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.bool,
+  ]),
+  winningSquare: React.PropTypes.bool,
+};
