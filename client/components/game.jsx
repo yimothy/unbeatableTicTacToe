@@ -5,8 +5,6 @@ import AI from '../ai/AI.js';
 export default class Game extends Component {
   constructor() {
     super();
-    // Create an AI from the AI class
-    // this.ai;
     this.state = {
       turn: 0,
       versus: 'Human', // human or AI
@@ -29,11 +27,11 @@ export default class Game extends Component {
       }
       board.push(row);
     }
-    //Set board on state
+    // Set board on state
     this.setState({ board })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     // When DOM is updated, if versus AI and AI's turn, AI moves
     if (this.state.versus === 'AI' && this.state.AITurn) {
       const newBoard = this.state.board.map(row => row.slice());
@@ -51,9 +49,9 @@ export default class Game extends Component {
   }
 
   versus(event) {
-    let mode = event.target.value;
+    const mode = event.target.value;
     // Create new board to reset
-    let board = [];
+    const board = [];
     for (let i = 0; i < 3; i++) {
       const row = [];
       for (let j = 0; j < 3; j++) {
@@ -61,7 +59,7 @@ export default class Game extends Component {
       }
       board.push(row);
     }
-    // if human choses AI moves first. Create AI. Reset board.
+    // If human choses AI moves first. Create AI. Reset board.
     if (mode === 'AI1') {
       this.ai = new AI('X');
       this.setState({
@@ -72,7 +70,7 @@ export default class Game extends Component {
         AITurn: true,
         humanLetter: 'O',
       });
-    // if human choses AI moves second. Create AI. Reset board.
+    // If human choses AI moves second. Create AI. Reset board.
     } else if (mode === 'AI2') {
       this.ai = new AI('O');
       this.ai.readBoard(board);
@@ -108,8 +106,8 @@ export default class Game extends Component {
       const newBoard = [];
       this.state.board.forEach((row) => {
         newBoard.push(row.slice());
-      })
-
+      });
+      // Set move in new board
       newBoard[i][j] = this.state.xTurn ? 'X' : 'O';
       this.setState({
         board: newBoard,
@@ -118,10 +116,10 @@ export default class Game extends Component {
       });
     }
   }
-// Function to check if anyone has won
+  // Function to check if anyone has won
   gameOver(board) {
     let gameOver = false;
-    //Function to check rows if a player has won
+    // Function to check rows if a player has won
     const checkRows = () => {
       board.forEach((row) => {
           if (row[0] && row[0] === row[1] && row[0] === row[2]) {
@@ -129,7 +127,7 @@ export default class Game extends Component {
           }
       });
     };
-    //Function to check columns if a player has won
+    // Function to check columns if a player has won
     const checkCols = () => {
         for(let j = 0; j< board.length; j++) {
           if (board[0][j] && board[0][j] === board[1][j] && board[0][j] === board[2][j]) {
@@ -137,7 +135,7 @@ export default class Game extends Component {
           }
         }
     };
-    //Function to check diagonals if a player has won
+    // Function to check diagonals if a player has won
     const checkDiags = () => {
       if ((board[0][0] && board[0][0] === board[1][1] && board[0][0] === board[2][2])
       || (board[0][2] && board[0][2] === board[1][1] && board[0][2] === board[2][0])) {
