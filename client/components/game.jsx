@@ -6,7 +6,7 @@ export default class Game extends Component {
   constructor() {
     super();
     this.state = {
-      versus: 'Human', // human or AI
+      versus: 'AI', // human or AI. Default AI.
       board: null, // Default starting board with no values
       xTurn: true,
       AITurn: false,
@@ -32,6 +32,11 @@ export default class Game extends Component {
     this.setState({ board })
   }
 
+  componentDidMount() {
+    // Initialize AI
+    this.versus('AI1');
+  }
+
   // When human moves, if versus AI and AI's turn, AI moves
   componentDidUpdate() {
     if (this.state.versus === 'AI' && this.state.AITurn) {
@@ -51,7 +56,7 @@ export default class Game extends Component {
   }
   // Sets mode based on who human chooses to play
   versus(event) {
-    const mode = event.target.value;
+    const mode = event === 'AI1' ? 'AI1' : event.target.value;
     // Create new board to reset
     const board = [];
     for (let i = 0; i < 3; i++) {
@@ -198,7 +203,7 @@ export default class Game extends Component {
       } else if (this.gameOver(this.state.board)) {
         message = ' | GAME OVER!';
       } else {
-        message = ' | MAKE A MOVE!';
+        message = ' | Make a move!';
       }
     }
     if (this.state.versus === 'Human') {
