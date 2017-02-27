@@ -99,7 +99,7 @@ class AI {
     return moves;
   }
   // Finds all possible paths for 2 in a row (a threat)
-  createThreat(board) {
+  findThreats(board) {
     const threats = [];
     const moves = this.possibleMoves(board);
     moves.forEach((move) => {
@@ -107,10 +107,12 @@ class AI {
       const i = move[0];
       const j = move[1];
       phantomBoard[i][j] = this.letter;
+      this.readMove(this.letter, i, j);
       const winNextMove = this.winNextMove(phantomBoard, this.letter);
-      if (winNextMove) {
+      if (winNextMove.length > 0) {
         threats.push([i, j]);
       }
+      this.undoMove(this.letter, i, j);
     });
     return threats;
   }
@@ -120,7 +122,6 @@ class AI {
     const winMoves = [];
     // Check rows for next move wins, i.e. when the row/column/diagonal would equal 3 next
     for (const row in this.rows) {
-      // console.log('ROW: ', row)
       if (this.rows[row][letter] === 2 && this.rows[row][other] === 0) {
         // Find the move that will end the game
         const j = board[row].indexOf(false);
@@ -332,7 +333,7 @@ class AI {
     // Find all possible moves.
     const enemy = this.letter === 'X' ? 'O' : 'X';
     const enemyTraps = this.findTraps(board, enemy);
-    const threats = this.createThreat(board);
+    const threats = this.findThreats(board);
     const moves = this.possibleMoves(board);
     const prioritize = this.prioritizeMoves(board, this.letter);
 
@@ -341,11 +342,25 @@ class AI {
     }
     // Edge case: when there are 2 potential traps in the next move.
     // This cannot be in the prioritizeMoves function.
-    if (enemyTraps.length > 1) {
-      // Choose a threat (2-in-a-row) on an edge
-      const edges = [[0, 1], [1, 0], [1, 2], [2, 1]];
-      const random = Math.floor(Math.random() * edges.length);
-      return edges[random];
+    if (enemyTraps.length > 1 && threats.length > 0) {
+      const edgeThreats = [];
+      // Choose a threat (2-in-a-row) on an edge. If no edge threats,
+      // return random threat
+      threats.forEach((threat) => {
+        if ((threat[0] === 0 && threat[1] === 1)
+        || (threat[0] === 1 && threat[1] === 0)
+        || (threat[0] === 1 && threat[1] === 2)
+        || (threat[0] === 2 && threat[1] === 1)) {
+          edgeThreats.push(threat);
+        }
+      })
+      if (edgeThreats.length > 0) {
+        const randIdx = Math.floor(Math.random() * edgeThreats.length);
+        return edgeThreats[randIdx];
+      } else {
+        const random = Math.floor(Math.random() * threats.length);
+        return threats[random];
+      }
     }
     // If there are still available moves
     if (moves.length > 0) {
