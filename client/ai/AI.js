@@ -339,12 +339,11 @@ class AI {
     }
     // Edge case: when there are 2 potential traps in the next move.
     // This cannot be in the prioritizeMoves function.
-    if (enemyTraps.length > 1 && threats.length > 0) {
+    if (enemyTraps.length > 1) {
       // Choose a threat (2-in-a-row) on an edge
-      threats.forEach((threat) => {
-        if(threat[])
-      })
-      return threats[idx];
+      const edges = [[0, 1], [1, 0], [1, 2], [2, 1]];
+      const random = Math.floor(Math.random() * edges.length);
+      return edges[random];
     }
     // If there are still available moves
     if (moves.length > 0) {
