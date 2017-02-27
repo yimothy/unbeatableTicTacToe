@@ -193,15 +193,15 @@ export default class Game extends Component {
     };
     // let winner;
     const versus = this.state.versus;
-    let turn = this.state.xTurn ? 'X' : 'O';
+    const turn = this.state.xTurn ? 'X' : 'O';
     let message = '';
     this.gameOver(this.state.board)
     // Decide what message to say to human
     if (this.state.versus === 'AI') {
-      if (this.draw(this.state.board)) {
-        message = ' | DRAW! Try to win!'
-      } else if (this.gameOver(this.state.board)) {
+      if (this.gameOver(this.state.board)) {
         message = ' | GAME OVER!';
+      } else if (this.draw(this.state.board)) {
+        message = ' | DRAW! Try to win!'
       } else {
         message = ' | Make a move!';
       }
