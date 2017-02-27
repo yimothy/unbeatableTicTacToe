@@ -32,8 +32,8 @@ export default class Game extends Component {
     this.setState({ board })
   }
 
+  // When human moves, if versus AI and AI's turn, AI moves
   componentDidUpdate() {
-    // When DOM is updated, if versus AI and AI's turn, AI moves
     if (this.state.versus === 'AI' && this.state.AITurn) {
       const newBoard = this.state.board.map(row => row.slice());
       // AI calculates best move here

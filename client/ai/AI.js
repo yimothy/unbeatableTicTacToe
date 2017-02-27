@@ -227,10 +227,12 @@ class AI {
   This function calculates the best move for the AI by creating a
   phantom board and iterating through all possible moves up to 4 moves ahead.
   It predict's the human's next best moves and uses that information to find it's
-  own best move. It predict's the human's next moves by using the prioritizeMoves
-  function that the AI uses. Including the phantom moves in the findTrap and
-  winNextMove functions, this function allows the AI to look up to 4 phantom moves
-  ahead and chooses the best move out of all possible combinations.
+  own best move. The predictions are done by using the same prioritizeMoves
+  function that the AI uses (in essence, the AI is playing against itself on
+  a phantomBoard to find the best future moves). Including the phantom moves
+  in the findTrap and winNextMove functions, this function allows the AI to
+  look up to 4 phantom moves ahead and chooses the best move out of all
+  possible combinations.
   */
   lookAhead(board) {
     const bestMove = [];
